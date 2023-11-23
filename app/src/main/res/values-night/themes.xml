@@ -1,0 +1,7 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.OkEffect" parent="Theme.AppCompat.DayNight.NoActionBar" >
+        <item name="effectDrawableStyle">@style/DefaultEffectDrawable</item>
+    </style>
+
+</resources>

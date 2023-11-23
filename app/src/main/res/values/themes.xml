@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+
+    <style name="Theme.OkEffect" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="effectDrawableStyle">@style/DefaultEffectDrawable</item>
+    </style>
+
+    <style name="DefaultEffectDrawable">
+        <item name="ed_ninePathSrc">@drawable/shadow_default</item>
+    </style>
+</resources>
