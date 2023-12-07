@@ -97,7 +97,7 @@ public interface EffectParams {
     /**
      * 获取效果四周的大小
      *
-     * @param rect
+     * @param rect 用于保存四周大小（四周大小都是正值）
      */
     default void getEffectRect(Rect rect) {
         float strokeSize = getStrokeSize();

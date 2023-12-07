@@ -17,9 +17,14 @@ import androidx.annotation.Nullable;
 /**
  * Create by luochao
  * on 2023/11/23
+ * 实现的原理是在内部增加一个负margin的view设置EffectDrawable
+ * 该方案的好处：由于阴影部分的绘制需要关闭硬件加速，内部增加一个view来处理，只需要关闭该view的硬件加速即可，不需要关闭整个viewGroup的硬件加速，并且还可以因此提供效果的绘制层级（在所有view的底部或者顶部）
  */
 class EffectLayoutDelegate {
 
+    /**
+     * 代理需要反向注入调用的方法
+     */
     interface DI {
         int superGetChildDrawingOrder(int childCount, int drawingPosition);
 
@@ -34,9 +39,8 @@ class EffectLayoutDelegate {
     private int mEffectViewIndex = -1;
     private Effects.Builder<?, ?> mEffectBuilder;
     private EffectParams mEffectParams;
-    private boolean mUseNegativeMargin = Effects.DEFAULT_EFFECT_LAYOUT_USE_NEGATIVE_MARGIN;
-    private DI mDI;
-    private int mEffectViewOrder = EFFECT_VIEW_ORDER_BOTTOM;
+    private final DI mDI;
+    private int mEffectViewOrder = EFFECT_VIEW_ORDER_TOP;
 
     EffectLayoutDelegate(DI di, @NonNull ViewGroup viewGroup) {
         this.mDI = di;
@@ -44,20 +48,13 @@ class EffectLayoutDelegate {
     }
 
     void setup(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EffectLayout, defStyleAttr, 0);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EffectDrawable, defStyleAttr, 0);
         mEffectBuilder = Effects.withAttrs(ta);
-        mUseNegativeMargin = ta.getBoolean(R.styleable.EffectLayout_ed_useNegativeMargin, mUseNegativeMargin);
-        mEffectViewOrder = ta.getInt(R.styleable.EffectLayout_ed_effectOrderType, mEffectViewOrder);
-        //如果使用负margin，则就不使用负inset
-        mEffectBuilder.mUseNegativeInsetDrawable = mEffectBuilder.mUseNegativeInsetDrawable && !mUseNegativeMargin;
+        mEffectViewOrder = ta.getInt(R.styleable.EffectDrawable_ed_effectOrderType, mEffectViewOrder);
+        //禁用负inset，返回常规drawable
+        mEffectBuilder.mUseNegativeInsetDrawable = false;
         mEffectParams = mEffectBuilder.buildParams();
-        if (mUseNegativeMargin) {//采用负margin，只需要effect view自身关闭硬件加速即可,parent不裁剪
-            setupEffectView(context);
-        } else {
-            //todo 待补全说明
-            mViewGroup.setBackground(mEffectBuilder.buildFocusStateListDrawable());
-        }
-        Log.i("EffectCorner", "" + mEffectParams.getCornerRadius() + " " + mEffectParams.getCornerRadii());
+        setupEffectView(context);
     }
 
     /**
@@ -68,23 +65,23 @@ class EffectLayoutDelegate {
         if (mEffectView != null) {
             return;
         }
-        //由于effectView会超过parent，parent不能裁剪child
+        //关键点1：由于effectView会超过parent（负margin区域），parent不能裁剪child
         mViewGroup.setClipChildren(false);
         mEffectView = new EffectView(context);
-        //跟随父group的状态变化
+        //关键点2：跟随父group的状态变化（获焦点时显示，没获取焦点时隐藏）
         mEffectView.setDuplicateParentStateEnabled(true);
         mEffectView.setBackground(Effects.createFocusStateListDrawable(mEffectParams.create()));
         mEffectView.setLayoutParams(generateEffectViewLayoutParams());
-        //只需要自身view关闭硬件加速：奇怪的是在一款小米手机上（Android10）没有关闭硬件加速但是效果也绘制出来了
+        //关键点3：阴影的绘制需要关闭硬件加速：奇怪的是在一款小米手机上（Android10）没有关闭硬件加速但是效果也绘制出来了
         mEffectView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mViewGroup.addView(mEffectView);
-        if (mViewGroup.isFocused()) {
-            mEffectView.setVisibility(View.VISIBLE);
-        } else {
-            mEffectView.setVisibility(View.INVISIBLE);
-        }
     }
 
+    /**
+     * 用于版本兼容：在Android 7之前，如果childView设置的LayoutParams与{@link #mViewGroup}类型不同，会导致添加到ViewGroup中时margin被忽略
+     *
+     * @see View.sPreserveMarginParamsInLayoutParamConversion （包访问）Android 7即以后的源码中有该变量的定义
+     */
     private ViewGroup.LayoutParams generateEffectViewLayoutParams() {
         ViewGroup.MarginLayoutParams layoutParams;
         if (mViewGroup instanceof FrameLayout) {
@@ -102,27 +99,20 @@ class EffectLayoutDelegate {
     }
 
     /**
-     * 是否使用额外的效果视图；负margin方案则需要采用额外的view来处理
-     */
-    boolean useEffectView() {
-        return mUseNegativeMargin;
-    }
-
-    /**
      * 获取绘制顺序
      *
      * @param childCount      子view数量
      * @param drawingPosition 绘制位置
      */
+    @CallBy
     int getChildDrawingOrder(int childCount, int drawingPosition) {
-        if (useEffectView()) {
-            if (mEffectViewOrder == EFFECT_VIEW_ORDER_BOTTOM) {
-                return getChildDrawingOrderBottom(childCount, drawingPosition, mEffectViewIndex);
-            } else if (mEffectViewOrder == EFFECT_VIEW_ORDER_TOP) {
-                return getChildDrawingOrderTop(childCount, drawingPosition, mEffectViewIndex);
-            }
+        if (mEffectViewOrder == EFFECT_VIEW_ORDER_BOTTOM) {
+            return getChildDrawingOrderBottom(childCount, drawingPosition, mEffectViewIndex);
+        } else if (mEffectViewOrder == EFFECT_VIEW_ORDER_TOP) {
+            return getChildDrawingOrderTop(childCount, drawingPosition, mEffectViewIndex);
+        } else {
+            return mDI.superGetChildDrawingOrder(childCount, drawingPosition);
         }
-        return mDI.superGetChildDrawingOrder(childCount, drawingPosition);
     }
 
     private int getChildDrawingOrderBottom(int childCount, int drawingPosition, int effectIndex) {
@@ -154,41 +144,42 @@ class EffectLayoutDelegate {
         }
     }
 
+    @CallBy
     void onViewAdded(View child) {
         setupEffectViewIndex();
     }
 
+    @CallBy
     void onViewRemoved(View child) {
         setupEffectViewIndex();
     }
 
     private void setupEffectViewIndex() {
         if (mEffectView == null) {
-            if (useEffectView()) {
-                Log.w("okEffect", "EffectLayoutDelegate -> useEffectView,but the effect view is null.");
-            }
+            Log.w("okEffect", "EffectLayoutDelegate -> useEffectView,but the effect view is null.");
             return;
         }
         mEffectViewIndex = mViewGroup.indexOfChild(mEffectView);
     }
 
+    @CallBy
     void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
-        if (!useEffectView())
-            return;
-        //这部分只是预防逻辑，其实可以不用，直接让mEffectView一直显示即可（背景是selector，未选中时没有背景和效果）
-        if (gainFocus) {
-            mEffectView.setVisibility(View.VISIBLE);
-        } else {
-            mEffectView.setVisibility(View.INVISIBLE);
-        }
+//        //这部分只是预防逻辑，其实可以不用，直接让mEffectView一直显示即可（背景是selector，未选中时没有背景和效果）
+//        if (gainFocus) {
+//            mEffectView.setVisibility(View.VISIBLE);
+//        } else {
+//            mEffectView.setVisibility(View.INVISIBLE);
+//        }
     }
 
+    @CallBy
     void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         mDI.superOnMeasure(widthMeasureSpec, heightMeasureSpec);
         Log.d("EFDelegateG" + this.hashCode(), "onMeasure: gMeasuredWidth=" + mViewGroup.getMeasuredWidth() + " gMeasuredHeight=" + mViewGroup.getMeasuredHeight());
-        if (useEffectView() && mEffectView != null) {
+        if (mEffectView != null) {
             mEffectView.onMeasureSecondary(widthMeasureSpec, heightMeasureSpec, mViewGroup.getMeasuredWidth(), mViewGroup.getMeasuredHeight());
 //            Log.d("EFDelegateG" + this.hashCode(), "onMeasure: gMeasuredWidth=" + mViewGroup.getMeasuredWidth() + " gMeasuredHeight=" + mViewGroup.getMeasuredHeight());
         }
     }
+
 }

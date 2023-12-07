@@ -117,7 +117,7 @@ final class ShadowEffect extends AbstractEffect<ShadowEffect.ShadowState> {
         }
     }
 
-    static final class ShadowState extends AbstractState {
+    static final class ShadowState extends AbstractEffect.AbstractState {
 
         Path mPath = new Path();
         RectF mRectF = new RectF();

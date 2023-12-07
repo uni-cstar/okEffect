@@ -43,11 +43,6 @@ public class Effects {
     static final boolean DEFAULT_EFFECT_DRAWABLE_USE_NEGATIVE_INSET = true;
 
     /**
-     * EffectLayout默认使用负margin
-     */
-    static final boolean DEFAULT_EFFECT_LAYOUT_USE_NEGATIVE_MARGIN = true;
-
-    /**
      * 边框圆角绘制优化自定处理所判断的边框大小限定值，超过该值才会启用边框（阴影）圆角绘制优化
      */
     @Px
@@ -224,7 +219,7 @@ public class Effects {
             } else {
                 setCornerRadius(ta.getDimension(R.styleable.EffectDrawable_ed_cornerSize, 0f));
             }
-            mUseNegativeInsetDrawable = ta.getBoolean(R.styleable.EffectLayout_ed_useNegativeMargin, DEFAULT_EFFECT_DRAWABLE_USE_NEGATIVE_INSET);
+            mUseNegativeInsetDrawable = ta.getBoolean(R.styleable.EffectDrawable_ed_useNegativeInset, DEFAULT_EFFECT_DRAWABLE_USE_NEGATIVE_INSET);
             return (T) this;
         }
 

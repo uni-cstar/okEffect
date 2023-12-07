@@ -1,19 +1,12 @@
 package unics.okeffect.sample
 
-import android.graphics.Color
 import android.graphics.RectF
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.Log
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.imageview.ShapeableImageView
 import unics.okeffect.Effects
-import kotlin.concurrent.thread
-import kotlin.random.Random
 
 /**
  * Create by luochao
@@ -41,6 +34,9 @@ class EffectLayoutSampleActivity : AppCompatActivity() {
                 } bottomLeftCornerSize=${this.bottomLeftCornerSize.getCornerSize(rectF)}"
             )
         }
+//    findViewById<View>(R.id.root).setLayerType(View.LAYER_TYPE_SOFTWARE,null)
+//    findViewById<View>(R.id.effectGroup2).setLayerType(View.LAYER_TYPE_SOFTWARE,null)
+//    findViewById<View>(R.id.effectLayout2).setLayerType(View.LAYER_TYPE_SOFTWARE,null)
 
 //        val texts = listOf<String>(
 //            "当阳光洒在小村庄的土地上，勾勒出金黄的麦浪，仿佛是大地的诗篇",

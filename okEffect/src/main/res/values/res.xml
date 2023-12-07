@@ -48,12 +48,23 @@
     <!--阴影底部大小-->
     <attr name="ed_shadowSizeBottom" format="dimension|reference" />
 
-    <declare-styleable name="EffectDrawable">
-        <!--是否在使用该属性的view上应用效果：该属性要结合[EffectInjectFactory2]使用才能发挥作用-->
-        <attr name="ed_inject" format="boolean" />
+    <!--阴影/边框/.9图的效果区域是否显示在布局的界限内，默认false，即效果不会占用布局的位置（但是需要配合parent设置clipChildren=false）-->
+    <attr name="ed_useNegativeInset" format="boolean" />
 
-        <!--阴影/边框/.9图的效果区域是否显示在布局的界限内，默认false，即效果不会占用布局的位置（但是需要配合parent设置clipChildren=false）-->
-        <attr name="ed_effectInLayoutBounds" format="boolean"/>
+    <!--是否在使用该属性的view上应用效果：该属性要结合[EffectInjectFactory2]使用才能发挥作用:对EffectLayout无效-->
+    <attr name="ed_inject" format="boolean" />
+
+    <!--EffectLayoutTemplate:采用负margin效果时，效果跟其他视图展示的顺序-->
+    <attr name="ed_effectOrderType" format="enum">
+        <!--默认在视图顶部-->
+        <enum name="top" value="0" />
+        <!--默认在视图底部-->
+        <enum name="bottom" value="1" />
+    </attr>
+
+    <declare-styleable name="EffectDrawable">
+        <attr name="ed_inject" />
+        <attr name="ed_useNegativeInset" />
         <attr name="ed_ninePathSrc" />
         <attr name="ed_useDraw" />
         <attr name="ed_strokeSize" />
@@ -66,27 +77,19 @@
         <attr name="ed_cornerSizeBottomRight" />
         <attr name="ed_cornerSizeBottomLeft" />
 
-        <!--以下属性只对绘制的阴影方式生效，对.9效果不生效，阴影绘制需要关闭硬件加速，性能没有使用.9效率高-->
         <attr name="ed_shadowColor" />
         <attr name="ed_shadowSize" />
         <attr name="ed_shadowSizeLeft" />
         <attr name="ed_shadowSizeTop" />
         <attr name="ed_shadowSizeRight" />
         <attr name="ed_shadowSizeBottom" />
+
+        <attr name="ed_effectOrderType"/>
     </declare-styleable>
 
     <declare-styleable name="EffectLayout">
-        <!--是否在显示效果时使用负margin，默认true，这样只需要在view内部关闭硬件加速，使用负margin的情况下ed_effectInLayoutBounds属性则只会限定成false-->
-        <attr name="ed_useNegativeMargin" format="boolean" />
-
-        <!--采用负margin效果时，效果跟其他视图展示的顺序-->
-        <attr name="ed_effectOrderType" format="enum">
-            <!--默认在视图顶部-->
-            <enum name="top" value="0" />
-            <!--默认在视图底部-->
-            <enum name="bottom" value="1" />
-        </attr>
-
+        <!--        <attr name="ed_inject" />-->
+        <attr name="ed_useNegativeInset" />
         <attr name="ed_ninePathSrc" />
         <attr name="ed_useDraw" />
         <attr name="ed_strokeSize" />
@@ -99,12 +102,13 @@
         <attr name="ed_cornerSizeBottomRight" />
         <attr name="ed_cornerSizeBottomLeft" />
 
-        <!--以下属性只对绘制的阴影方式生效，对.9效果不生效，阴影绘制需要关闭硬件加速，性能没有使用.9效率高-->
         <attr name="ed_shadowColor" />
         <attr name="ed_shadowSize" />
         <attr name="ed_shadowSizeLeft" />
         <attr name="ed_shadowSizeTop" />
         <attr name="ed_shadowSizeRight" />
         <attr name="ed_shadowSizeBottom" />
+
+        <attr name="ed_effectOrderType" />
     </declare-styleable>
 </resources>

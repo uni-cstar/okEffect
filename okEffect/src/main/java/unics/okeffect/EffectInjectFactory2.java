@@ -17,8 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 public class EffectInjectFactory2 implements LayoutInflater.Factory2 {
 
-    private Activity mActivity;
-    private LayoutInflater.Factory2 mCustom;
+    private final Activity mActivity;
+    private final LayoutInflater.Factory2 mCustom;
 
     private static boolean sDependAppCompat = false;
 
@@ -71,19 +71,19 @@ public class EffectInjectFactory2 implements LayoutInflater.Factory2 {
                             if (view != null) {
                                 break;
                             }
-                        } catch (Throwable e) {
+                        } catch (Throwable ignored) {
                         }
                     }
                 } else {
                     try {
                         view = layoutInflater.createView(name, null, attrs);
-                    } catch (ClassNotFoundException e) {
+                    } catch (ClassNotFoundException ignored) {
                     }
                 }
             }
         }
 
-        if (view != null && !(view instanceof EffectLayout)) {
+        if (view != null && !(view instanceof EffectLayoutTemplate)) {
             //EffectLayout内部会自己处理effect
             tryInjectEffect(view, context, attrs);
         }

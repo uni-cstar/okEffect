@@ -14,28 +14,27 @@ import androidx.annotation.Nullable;
 /**
  * Create by luochao
  * on 2023/11/23
+ * 代码模板
  */
-public class EffectLayout extends FrameLayout implements EffectLayoutDelegate.DI {
+public class EffectLayoutTemplate extends FrameLayout implements EffectLayoutDelegate.DI {
 
     private final EffectLayoutDelegate mDelegate;
 
-    public EffectLayout(@NonNull Context context) {
+    public EffectLayoutTemplate(@NonNull Context context) {
         this(context, null);
     }
 
-    public EffectLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public EffectLayoutTemplate(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, R.attr.effectDrawableStyle);
     }
 
-    public EffectLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public EffectLayoutTemplate(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         //这两句代码不能合并执行，否则在setup中添加了view，会导致onViewAdd的回调，此时mDelegate还未创建成功
         mDelegate = new EffectLayoutDelegate(this, this);
         mDelegate.setup(context, attrs, defStyleAttr);
-        if (mDelegate.useEffectView()) {
-            //修改绘制顺序
-            setChildrenDrawingOrderEnabled(true);
-        }
+        //修改绘制顺序
+        setChildrenDrawingOrderEnabled(true);
     }
 
     @Override
