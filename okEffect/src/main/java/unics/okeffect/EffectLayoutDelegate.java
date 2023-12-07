@@ -73,7 +73,13 @@ class EffectLayoutDelegate {
         mEffectView.setBackground(Effects.createFocusStateListDrawable(mEffectParams.create()));
         mEffectView.setLayoutParams(generateEffectViewLayoutParams());
         //关键点3：阴影的绘制需要关闭硬件加速：奇怪的是在一款小米手机上（Android10）没有关闭硬件加速但是效果也绘制出来了
-        mEffectView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        if (mEffectParams.shouldUseSoftwareLayer()) {
+            mEffectView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            Log.d("okEffect", "setupEffectView: shouldUseSoftwareLayer=true");
+        } else {
+            Log.d("okEffect", "setupEffectView: shouldUseSoftwareLayer=false");
+        }
+
         mViewGroup.addView(mEffectView);
     }
 

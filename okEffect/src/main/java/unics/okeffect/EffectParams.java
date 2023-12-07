@@ -3,6 +3,7 @@ package unics.okeffect;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
+import android.os.Build;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -108,6 +109,18 @@ public interface EffectParams {
                 (int) (getShadowBottom() + strokeSize + contentGap));
     }
 
+    /**
+     * 是否应该使用软件绘制（关闭硬件加速）
+     * <a href="https://developer.android.com/guide/topics/graphics/hardware-accel?hl=zh-cn#layers">硬件加速的官方资料</a>
+     */
+    default boolean shouldUseSoftwareLayer() {
+        float[] cornerRadii = getCornerRadii();
+        //需要优化边框圆角
+        boolean isOptStrokeCorner = this.optStrokeCorner() && this.getStrokeSize() > 0 && (getCornerRadius() > 0f || (cornerRadii != null && cornerRadii.length > 0));
+        return ( Build.VERSION.SDK_INT < 28 && isOptStrokeCorner) //边框的圆角优化采用了Xfermode，在28以前需要关闭硬件加速
+                || (this instanceof DrawEffectParams && ((DrawEffectParams) this).hasShadow());//阴影使用了
+    }
+
     @NonNull
     default Drawable create() {
         return EffectDrawableFactory.createEffectDrawable(this);
@@ -116,6 +129,13 @@ public interface EffectParams {
     interface DrawEffectParams extends EffectParams {
 
         int getShadowColor();
+
+        /**
+         * 是否设置了阴影（绘制的阴影需要关闭硬件加速）
+         */
+        default boolean hasShadow() {
+            return getShadowLeft() > 0 || getShadowTop() > 0 || getShadowRight() > 0 || getShadowBottom() > 0;
+        }
 
         @Override
         default boolean optStrokeOutCorner() {

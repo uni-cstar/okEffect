@@ -425,4 +425,8 @@ public class Effects {
     static void log(String message) {
         Log.d("Effect", message);
     }
+
+//    static boolean approximatelyEquals(float self, float other) {
+//        return Math.abs(self - other) < 1e-10;
+//    }
 }

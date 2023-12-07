@@ -123,7 +123,7 @@ interface EffectDrawableFactory<T extends EffectParams> {
 
         @Override
         public Drawable create(EffectParams.DrawEffectParams params) {
-            boolean hasShadow = params.getShadowLeft() > 0 || params.getShadowTop() > 0 || params.getShadowRight() > 0 || params.getShadowBottom() > 0;
+            boolean hasShadow = params.hasShadow();
             boolean hasStroke = params.getStrokeSize() > 0;
             Drawable content;
             if (hasShadow && hasStroke) {

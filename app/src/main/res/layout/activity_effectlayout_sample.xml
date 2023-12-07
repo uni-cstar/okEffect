@@ -46,8 +46,6 @@
             android:focusableInTouchMode="true"
             app:ed_cornerSize="12px"
             app:ed_effectOrderType="bottom"
-            app:ed_shadowColor="#3d11dc"
-            app:ed_shadowSize="10dp"
             android:layout_marginLeft="25dp"
             app:ed_strokeColor="#c13dcd"
             app:ed_strokeSize="2dp"
