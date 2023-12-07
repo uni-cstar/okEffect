@@ -1,9 +1,11 @@
 package unics.okeffect;
 
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 
@@ -51,9 +53,19 @@ public interface EffectParams {
     int getStrokeColor();
 
     /**
-     * 是否优化边框远角处的绘制
+     * 是否优化边框圆角处的绘制：
      */
     boolean optStrokeCorner();
+
+    /**
+     * 是否优化边框圆角处外边框圆角（前提{@link #optStrokeCorner}必须为true）
+     */
+    boolean optStrokeOutCorner();
+
+    /**
+     * 获取外边框圆角半径额外的增量；{@link #optStrokeOutCorner()}开启时才有效
+     */
+    float getIncrementStrokeOutCornerRadius();
 
     /**
      * 内容与边框之间的间距
@@ -77,12 +89,72 @@ public interface EffectParams {
     @Nullable
     float[] getCornerRadii();
 
+    /**
+     * 创建Drawable的时候是否使用负Inset的Drawable
+     */
+    boolean useNegativeInsetDrawable();
+
+    /**
+     * 获取效果四周的大小
+     *
+     * @param rect
+     */
+    default void getEffectRect(Rect rect) {
+        float strokeSize = getStrokeSize();
+        float contentGap = getContentGap();
+        rect.set((int) (getShadowLeft() + strokeSize + contentGap),
+                (int) (getShadowTop() + strokeSize + contentGap),
+                (int) (getShadowRight() + strokeSize + contentGap),
+                (int) (getShadowBottom() + strokeSize + contentGap));
+    }
+
+    @NonNull
+    default Drawable create() {
+        return EffectDrawableFactory.createEffectDrawable(this);
+    }
+
     interface DrawEffectParams extends EffectParams {
+
         int getShadowColor();
+
+        @Override
+        default boolean optStrokeOutCorner() {
+            return Effects.DEFAULT_ENABLE_OPT_OUT_CORNER;
+        }
+
+        /**
+         * .9图默认不开启边框外圆角半径优化
+         */
+        @Override
+        default float getIncrementStrokeOutCornerRadius() {
+            if (optStrokeOutCorner()) {
+                return getStrokeSize() / 2f;
+            } else {
+                return 0f;
+            }
+        }
     }
 
     interface NinePathEffectParams extends EffectParams {
+
         NinePatchDrawable getDrawable();
+
+        /**
+         * .9图默认不开启外圆角半径优化;（没必要开启，如果开启之后，外圆角半径比实际的大，会可能与.9图的半径不一致）
+         */
+        @Override
+        default boolean optStrokeOutCorner() {
+            return false;
+        }
+
+        /**
+         * .9图默认不开启边框外圆角半径优化
+         */
+        @Override
+        default float getIncrementStrokeOutCornerRadius() {
+            return 0;
+        }
+
     }
 
     abstract class CommonParams implements EffectParams {
@@ -97,14 +169,17 @@ public interface EffectParams {
         float mContentGap;
         float mCornerRadius;
         float[] mCornerRadii;
+        boolean mUseNegativeInsetDrawable;
 
         public CommonParams(Effects.Builder<?, ?> builder) {
             mStrokeSize = builder.mStrokeSize;
             mStrokeColor = builder.mStrokeColor;
+            //如果设置了优化边框或者设置了自动优化并且边框大小超过了指定的厚度则进行边框优化
             mOptStrokeCorner = builder.mOptStrokeCorner;
             mContentGap = builder.mContentGap;
             mCornerRadius = builder.mCornerRadius;
             mCornerRadii = builder.mCornerRadii;
+            mUseNegativeInsetDrawable = builder.mUseNegativeInsetDrawable;
         }
 
         @Override
@@ -158,6 +233,10 @@ public interface EffectParams {
             return mCornerRadii;
         }
 
+        @Override
+        public boolean useNegativeInsetDrawable() {
+            return mUseNegativeInsetDrawable;
+        }
     }
 
     /**

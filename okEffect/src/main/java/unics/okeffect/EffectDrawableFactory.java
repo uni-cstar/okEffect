@@ -1,5 +1,8 @@
 package unics.okeffect;
 
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
@@ -13,31 +16,41 @@ interface EffectDrawableFactory<T extends EffectParams> {
 
     Drawable create(T params);
 
-    static ShadowEffect createShadowEffect(EffectParams.DrawEffectParams params) {
-        return createShadowEffect(params, false, 0f);
+    Rect sEffectInsetRect = new Rect();
+
+    static Drawable createEffectDrawable(EffectParams params) {
+        if (params instanceof EffectParams.NinePathEffectParams) {
+            return NinePath.getInstance().create((EffectParams.NinePathEffectParams) params);
+        } else if (params instanceof EffectParams.DrawEffectParams) {
+            return Draw.getInstance().create((EffectParams.DrawEffectParams) params);
+        }
+        throw new RuntimeException("not support effect params type " + params.getClass().getName());
     }
 
-    static ShadowEffect createShadowEffect(EffectParams.DrawEffectParams params, boolean optShadowCorner, float optShadowSize) {
+    /**
+     * 创建阴影效果
+     */
+    static ShadowEffect createShadowEffect(EffectParams.DrawEffectParams params) {
         ShadowEffect drawable = new ShadowEffect(params.getShadowLeft(), params.getShadowTop(), params.getShadowRight(), params.getShadowBottom());
         drawable.setColor(params.getShadowColor());
+        //阴影圆角绘制优化
+        drawable.setOptShadowCorner(params.optStrokeOutCorner(), params.getIncrementStrokeOutCornerRadius());
         float[] radii = params.getCornerRadii();
         if (radii != null && radii.length > 0) {
             drawable.setCornerRadii(radii);
         } else {
             drawable.setCornerRadius(params.getCornerRadius());
         }
-        drawable.setOptShadowCorner(optShadowCorner, optShadowSize);
         return drawable;
     }
 
+    /**
+     * 创建边框效果
+     */
     static StrokeEffect createStrokeEffect(EffectParams params) {
-        return createStrokeEffect(params, Effects.DEFAULT_ENABLE_OPT_OUT_CORNER);
-    }
-
-    static StrokeEffect createStrokeEffect(EffectParams params, boolean optOutCorner) {
         StrokeEffect drawable = new StrokeEffect(params.getStrokeSize());
-        drawable.setOptOutCorner(optOutCorner);
-        drawable.setOptCorner(isOptStrokeCorner(params));
+        drawable.setOptOutCorner(params.optStrokeOutCorner());
+        drawable.setOptCorner(params.optStrokeCorner());
         drawable.setColor(params.getStrokeColor());
         float[] radii = params.getCornerRadii();
         if (radii != null && radii.length > 0) {
@@ -48,16 +61,24 @@ interface EffectDrawableFactory<T extends EffectParams> {
         return drawable;
     }
 
+    /**
+     * 创建{@link EffectDrawable}
+     *
+     * @param content 绘制的内容部分
+     * @param params  对应的参数
+     */
     static Drawable createEffectDrawable(Drawable content, EffectParams params) {
-        float strokeSize = params.getStrokeSize();
-        float contentGap = params.getContentGap();
+        params.getEffectRect(sEffectInsetRect);
         return new EffectDrawable(content,
-                -(int) (params.getShadowLeft() + strokeSize + contentGap),
-                -(int) (params.getShadowTop() + strokeSize + contentGap),
-                -(int) (params.getShadowRight() + strokeSize + contentGap),
-                -(int) (params.getShadowBottom() + strokeSize + contentGap));
+                -sEffectInsetRect.left,
+                -sEffectInsetRect.top,
+                -sEffectInsetRect.right,
+                -sEffectInsetRect.bottom);
     }
 
+    /**
+     * .9图构建工厂
+     */
     final class NinePath implements EffectDrawableFactory<EffectParams.NinePathEffectParams> {
 
         private static class SingleTone {
@@ -75,14 +96,21 @@ interface EffectDrawableFactory<T extends EffectParams> {
             Log.i("Stroke", "create: strokeSize=" + strokeSize);
             if (strokeSize > 0) {
                 //.9图的边框不用优化外边框圆角，这样子内边框和外边框的圆角是一样大的，就刚好能够跟.9切合
-                content = new LayerDrawable(new Drawable[]{params.getDrawable(), createStrokeEffect(params, false)});
+                content = new LayerDrawable(new Drawable[]{params.getDrawable(), createStrokeEffect(params)});
             } else {
                 content = params.getDrawable();
             }
-            return createEffectDrawable(content, params);
+            if (params.useNegativeInsetDrawable()) {
+                return createEffectDrawable(content, params);
+            } else {
+                return content;
+            }
         }
     }
 
+    /**
+     * 自定义绘制工厂
+     */
     final class Draw implements EffectDrawableFactory<EffectParams.DrawEffectParams> {
 
         private static class SingleTone {
@@ -100,7 +128,7 @@ interface EffectDrawableFactory<T extends EffectParams> {
             Drawable content;
             if (hasShadow && hasStroke) {
                 //有阴影有边框:阴影跟边框同时存在的情况下，阴影根据边框是否绘制优化来决定是否进行绘制优化
-                ShadowEffect shadow = createShadowEffect(params, isOptStrokeCorner(params), params.getStrokeSize() / 2f);
+                ShadowEffect shadow = createShadowEffect(params);
                 StrokeEffect stroke = createStrokeEffect(params);
                 content = new LayerDrawable(new Drawable[]{shadow, stroke});
             } else if (hasShadow) {
@@ -111,14 +139,14 @@ interface EffectDrawableFactory<T extends EffectParams> {
                 content = createStrokeEffect(params);
             } else {
                 //什么都没有
-                content = null;
+                content = new ColorDrawable(Color.TRANSPARENT);
             }
-            return createEffectDrawable(content, params);
+            if (params.useNegativeInsetDrawable()) {
+                return createEffectDrawable(content, params);
+            } else {
+                return content;
+            }
         }
     }
 
-    static boolean isOptStrokeCorner(EffectParams params) {
-        //如果设置了边框圆角优化或者开启了自动优化并且边框超过了阈值，则执行边框优化
-        return params.optStrokeCorner() || (Effects.mAutoOptStrokeCorner && params.getStrokeSize() > Effects.STOKE_THICK_LIMIT);
-    }
 }

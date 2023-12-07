@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--主题样式-->
     <attr name="effectDrawableStyle" format="reference" />
 
+    <!--使用.9图-->
     <attr name="ed_ninePathSrc" format="reference" />
-    <!--该属性的意义是用于全局主题配置的是.9图（即使用了ed_ninePathSrc属性），当某个view想使用绘制的方式实现阴影时，可以将本属性设置为true，这样就会忽略ed_ninePathSrc而采用绘制方式实现-->
-    <attr name="ed_useDraw" format="boolean"/>
+
+    <!--notice：该属性的意义是用于全局主题配置的是.9图（即使用了ed_ninePathSrc属性），当某个view想使用绘制的方式实现阴影时，可以将本属性设置为true，这样就会忽略ed_ninePathSrc而采用绘制方式实现-->
+    <attr name="ed_useDraw" format="boolean" />
+
+    <!--内容与效果（边框/阴影/.9图）之间的间距，默认0-->
+    <attr name="ed_contentGap" format="dimension|reference" />
     <!--边框宽度-->
     <attr name="ed_strokeSize" format="dimension|reference" />
-    <!--是否优化边框圆角处的绘制
+    <!--边框颜色-->
+    <attr name="ed_strokeColor" format="color|reference" />
+
+    <!--notice：是否优化边框圆角处的绘制
       现象原因：边框的绘制是画笔沿着边框中线进行绘制，在圆角处，会导致圆角内线圆弧比实际的圆角小(如果边框很大，内圆角就很小)，外线圆弧比实际的圆角大（如果还存在阴影效果的话，会在边框和阴影之间造成形成一个空隙）。
       可能导致的现象：举个极端例子，如果边框很大，那么绘制内圆角很小，甚至成直角（边框很大的情况），如果存在.9阴影或者自己绘制的阴影，外圆角跟阴影之间会形成空隙
       优化原理：因此在存在圆角设置的情况下，边框绘制的时候，会保证内圆角跟设置的圆角度数一样大，并且让外圆角增大半个边框大小来进行绘制（如果存在阴影，阴影的绘制就需要往内扩展对应的大小区域，如果是.9图，则不改变外圆角大小）-->
     <attr name="ed_optStrokeCorner" format="boolean" />
-    <!--边框颜色-->
-    <attr name="ed_strokeColor" format="color|reference" />
-    <!--内容与边框/阴影之间的间距-->
-    <attr name="ed_contentGap" format="dimension|reference" />
+
     <!--圆角大小-->
     <attr name="ed_cornerSize" format="dimension|reference" />
     <!--左上圆角大小-->
@@ -45,49 +51,60 @@
     <declare-styleable name="EffectDrawable">
         <!--是否在使用该属性的view上应用效果：该属性要结合[EffectInjectFactory2]使用才能发挥作用-->
         <attr name="ed_inject" format="boolean" />
+
+        <!--阴影/边框/.9图的效果区域是否显示在布局的界限内，默认false，即效果不会占用布局的位置（但是需要配合parent设置clipChildren=false）-->
+        <attr name="ed_effectInLayoutBounds" format="boolean"/>
         <attr name="ed_ninePathSrc" />
-        <attr name="ed_useDraw" format="boolean"/>
-        <attr name="ed_strokeSize" format="dimension|reference" />
-        <attr name="ed_optStrokeCorner" format="boolean" />
-        <attr name="ed_strokeColor" format="color|reference" />
-        <attr name="ed_contentGap" format="dimension|reference" />
-        <attr name="ed_cornerSize" format="dimension|reference" />
-        <attr name="ed_cornerSizeTopLeft" format="dimension|reference" />
-        <attr name="ed_cornerSizeTopRight" format="dimension|reference" />
-        <attr name="ed_cornerSizeBottomRight" format="dimension|reference" />
-        <attr name="ed_cornerSizeBottomLeft" format="dimension|reference" />
+        <attr name="ed_useDraw" />
+        <attr name="ed_strokeSize" />
+        <attr name="ed_optStrokeCorner" />
+        <attr name="ed_strokeColor" />
+        <attr name="ed_contentGap" />
+        <attr name="ed_cornerSize" />
+        <attr name="ed_cornerSizeTopLeft" />
+        <attr name="ed_cornerSizeTopRight" />
+        <attr name="ed_cornerSizeBottomRight" />
+        <attr name="ed_cornerSizeBottomLeft" />
 
         <!--以下属性只对绘制的阴影方式生效，对.9效果不生效，阴影绘制需要关闭硬件加速，性能没有使用.9效率高-->
-        <attr name="ed_shadowColor" format="color|reference" />
-        <attr name="ed_shadowSize" format="dimension|reference" />
-        <attr name="ed_shadowSizeLeft" format="dimension|reference" />
-        <attr name="ed_shadowSizeTop" format="dimension|reference" />
-        <attr name="ed_shadowSizeRight" format="dimension|reference" />
-        <attr name="ed_shadowSizeBottom" format="dimension|reference" />
+        <attr name="ed_shadowColor" />
+        <attr name="ed_shadowSize" />
+        <attr name="ed_shadowSizeLeft" />
+        <attr name="ed_shadowSizeTop" />
+        <attr name="ed_shadowSizeRight" />
+        <attr name="ed_shadowSizeBottom" />
     </declare-styleable>
 
     <declare-styleable name="EffectLayout">
-        <!--是否在显示效果时使用负margin，默认使用，这样只需要在view内部关闭硬件加速-->
-        <attr name="ed_useNegativeMargin" format="boolean"/>
+        <!--是否在显示效果时使用负margin，默认true，这样只需要在view内部关闭硬件加速，使用负margin的情况下ed_effectInLayoutBounds属性则只会限定成false-->
+        <attr name="ed_useNegativeMargin" format="boolean" />
+
+        <!--采用负margin效果时，效果跟其他视图展示的顺序-->
+        <attr name="ed_effectOrderType" format="enum">
+            <!--默认在视图顶部-->
+            <enum name="top" value="0" />
+            <!--默认在视图底部-->
+            <enum name="bottom" value="1" />
+        </attr>
 
         <attr name="ed_ninePathSrc" />
-        <attr name="ed_useDraw" format="boolean"/>
-        <attr name="ed_strokeSize" format="dimension|reference" />
-        <attr name="ed_optStrokeCorner" format="boolean" />
-        <attr name="ed_strokeColor" format="color|reference" />
-        <attr name="ed_contentGap" format="dimension|reference" />
-        <attr name="ed_cornerSize" format="dimension|reference" />
-        <attr name="ed_cornerSizeTopLeft" format="dimension|reference" />
-        <attr name="ed_cornerSizeTopRight" format="dimension|reference" />
-        <attr name="ed_cornerSizeBottomRight" format="dimension|reference" />
-        <attr name="ed_cornerSizeBottomLeft" format="dimension|reference" />
+        <attr name="ed_useDraw" />
+        <attr name="ed_strokeSize" />
+        <attr name="ed_optStrokeCorner" />
+        <attr name="ed_strokeColor" />
+        <attr name="ed_contentGap" />
+        <attr name="ed_cornerSize" />
+        <attr name="ed_cornerSizeTopLeft" />
+        <attr name="ed_cornerSizeTopRight" />
+        <attr name="ed_cornerSizeBottomRight" />
+        <attr name="ed_cornerSizeBottomLeft" />
 
         <!--以下属性只对绘制的阴影方式生效，对.9效果不生效，阴影绘制需要关闭硬件加速，性能没有使用.9效率高-->
-        <attr name="ed_shadowColor" format="color|reference" />
-        <attr name="ed_shadowSize" format="dimension|reference" />
-        <attr name="ed_shadowSizeLeft" format="dimension|reference" />
-        <attr name="ed_shadowSizeTop" format="dimension|reference" />
-        <attr name="ed_shadowSizeRight" format="dimension|reference" />
-        <attr name="ed_shadowSizeBottom" format="dimension|reference" />
+        <attr name="ed_shadowColor" />
+        <attr name="ed_shadowSize" />
+        <attr name="ed_shadowSizeLeft" />
+        <attr name="ed_shadowSizeTop" />
+        <attr name="ed_shadowSizeRight" />
+        <attr name="ed_shadowSizeBottom" />
     </declare-styleable>
 </resources>

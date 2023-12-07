@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="sdgsdf"/>
+
+    <!--    <unics.okeffect.EffectLayout-->
+    <!--        android:id="@+id/effectLayout1"-->
+    <!--        android:layout_width="30dp"-->
+    <!--        android:layout_height="30dp"-->
+    <!--        android:background="#321100cf"-->
+    <!--        android:clickable="true"-->
+    <!--        android:focusable="true"-->
+    <!--        android:focusableInTouchMode="true"-->
+    <!--        app:ed_effectOrderType="top"-->
+    <!--        app:ed_ninePathSrc="@drawable/shadow_default" />-->
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clipChildren="false">
+
+        <unics.okeffect.EffectLayout
+            android:id="@+id/effectLayout2"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:ed_cornerSize="12px"
+            app:ed_effectOrderType="top"
+            app:ed_shadowColor="#3d11dc"
+            app:ed_shadowSize="10dp"
+            android:layout_marginLeft="25dp"
+            app:ed_strokeColor="#c13dcd"
+            app:ed_strokeSize="2dp"
+            app:ed_useDraw="true"
+            app:ed_optStrokeCorner="true">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/effectImage2"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/hellowrold"
+                app:shapeAppearanceOverlay="@style/RoundedMedium" />
+
+        </unics.okeffect.EffectLayout>
+
+        <unics.okeffect.EffectLayout
+            android:id="@+id/effectLayout22"
+            android:layout_marginLeft="50dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:ed_cornerSize="12px"
+            app:ed_effectOrderType="top"
+            app:ed_shadowColor="#3d11dc"
+            app:ed_shadowSize="10dp"
+            app:ed_useDraw="true">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/effectImage22"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/hellowrold"
+                app:shapeAppearanceOverlay="@style/RoundedMedium" />
+
+        </unics.okeffect.EffectLayout>
+    </LinearLayout>
+
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/effectLayout3"-->
+<!--        android:layout_width="124dp"-->
+<!--        android:layout_height="124dp"-->
+<!--        android:clickable="true"-->
+<!--        android:clipChildren="false"-->
+<!--        android:focusable="true"-->
+<!--        app:ed_inject="true"-->
+<!--        android:focusableInTouchMode="true">-->
+
+<!--        <com.google.android.material.imageview.ShapeableImageView-->
+<!--            android:id="@+id/effectImage3"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:padding="1dp"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/hellowrold"-->
+<!--            app:shapeAppearanceOverlay="@style/RoundedMedium"-->
+<!--            app:strokeColor="#ca0100"-->
+<!--            app:strokeWidth="2dp" />-->
+
+
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="@drawable/shape_stroke" />-->
+<!--    </FrameLayout>-->
+
+    <!--    <unics.okeffect.EffectLayout-->
+    <!--        android:id="@+id/effectLayout3"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:clickable="true"-->
+    <!--        android:focusable="true"-->
+    <!--        android:focusableInTouchMode="true"-->
+    <!--        app:ed_ninePathSrc="@drawable/shadow_2">-->
+
+    <!--        <com.google.android.material.imageview.ShapeableImageView-->
+    <!--            android:layout_width="60dp"-->
+    <!--            android:layout_height="60dp"-->
+    <!--            android:scaleType="centerCrop"-->
+    <!--            android:src="@drawable/hellowrold"-->
+    <!--            app:shapeAppearanceOverlay="@style/RoundedMedium2" />-->
+
+    <!--    </unics.okeffect.EffectLayout>-->
+
+</LinearLayout>

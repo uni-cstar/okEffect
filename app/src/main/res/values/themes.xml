@@ -8,4 +8,19 @@
     <style name="DefaultEffectDrawable">
         <item name="ed_ninePathSrc">@drawable/shadow_default</item>
     </style>
+
+    <dimen name="testCornerDimen">12px</dimen>
+
+    <style name="RoundedMedium">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12px</item>
+    </style>
+
+    <style name="RoundedMedium2">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">12px</item>
+        <item name="cornerSizeTopRight">60px</item>
+        <item name="cornerSizeBottomRight">12px</item>
+        <item name="cornerSizeBottomLeft">60px</item>
+    </style>
 </resources>

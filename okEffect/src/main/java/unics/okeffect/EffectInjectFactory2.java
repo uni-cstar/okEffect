@@ -55,15 +55,16 @@ public class EffectInjectFactory2 implements LayoutInflater.Factory2 {
         if (view == null) {
             if (sDependAppCompat && mActivity instanceof AppCompatActivity) {
                 view = ((AppCompatActivity) mActivity).getDelegate().createView(parent, name, context, attrs);
+                if (view == null && name.startsWith("androidx"))
+                    return null;
             }
             if (view == null) {
                 view = mActivity.onCreateView(parent, name, context, attrs);
             }
 
-            if(view == null){
+            if (view == null) {
                 LayoutInflater layoutInflater = mActivity.getLayoutInflater();
                 if (-1 == name.indexOf('.')) {
-
                     for (String prefix : sClassPrefixList) {
                         try {
                             view = layoutInflater.createView(name, prefix, attrs);
@@ -98,13 +99,13 @@ public class EffectInjectFactory2 implements LayoutInflater.Factory2 {
     private void tryInjectEffect(@NonNull View view, @NonNull Context context, @NonNull AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EffectDrawable, R.attr.effectDrawableStyle, Effects.defaultEffectDrawableStyleRes);
         if (ta.getBoolean(R.styleable.EffectDrawable_ed_inject, false)) {
-            Effects.Builder builder = Effects.withAttrs(ta);
+            Effects.Builder<?, ?> builder = Effects.withAttrs(ta);
             int pl = view.getPaddingLeft();
             int pt = view.getPaddingTop();
             int pr = view.getPaddingRight();
             int pb = view.getPaddingBottom();
             if (view.isFocusable()) {
-                view.setBackground(builder.buildFocusSelectorDrawable());
+                view.setBackground(builder.buildFocusStateListDrawable());
             } else {
                 view.setBackground(builder.buildDrawable());
             }

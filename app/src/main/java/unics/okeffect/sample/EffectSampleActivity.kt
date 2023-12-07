@@ -13,7 +13,7 @@ import unics.okeffect.Effects
  */
 class EffectSampleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        Effects.applyInjectFactory2(this,null);
+        Effects.applyInjectFactory2(this, null)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_effect_drawable_layout)
 
@@ -46,31 +46,32 @@ class EffectSampleActivity : AppCompatActivity() {
 //        view5.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 //        view6.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
+        Effects.setAutoOptStrokeCorner(false)
 
         //.9 view设置了padding
         view1.background =
-            Effects.withNinePath(this, R.drawable.bg_shadow).buildFocusSelectorDrawable()
+            Effects.withNinePath(this, R.drawable.bg_shadow).buildFocusStateListDrawable()
         view1.setPadding(20, 20, 20, 20)
 
         //.9
         view3.background =
-            Effects.withNinePath(this, R.drawable.bg_shadow).buildFocusSelectorDrawable()
+            Effects.withNinePath(this, R.drawable.bg_shadow).buildFocusStateListDrawable()
 
         //.9 + stroke
         view4.background =
             Effects.withNinePath(resources.getDrawable(R.drawable.bg_shadow) as NinePatchDrawable)
-                .setStroke(20f, Color.RED).buildFocusSelectorDrawable()
+                .setStroke(20f, Color.RED).buildFocusStateListDrawable()
 
         //.9 + stroke + contentGap
         view5.background = Effects.withNinePath(this, R.drawable.bg_shadow)
-            .setStroke(10f, Color.YELLOW).setContentCap(10f).buildFocusSelectorDrawable()
+            .setStroke(10f, Color.YELLOW).setContentCap(10f).buildFocusStateListDrawable()
 
         //.9 + stroke(圆角) + contentGap
         view6.background = Effects.withNinePath(this, R.drawable.bg_shadow)
             .setStroke(10f, Color.BLUE)
             .setContentCap(10f)
             .setCornerRadii(floatArrayOf(20f, 20f, 0f, 0f, 20f, 20f, 0f, 0f))
-            .buildFocusSelectorDrawable()
+            .buildFocusStateListDrawable()
         val view11 = findViewById<View>(R.id.view11)
         val view33 = findViewById<View>(R.id.view33)
         val view44 = findViewById<View>(R.id.view44)
@@ -83,20 +84,22 @@ class EffectSampleActivity : AppCompatActivity() {
 //        view66.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
         //阴影 + viewPadding
-        view11.background = Effects.withDraw().setShadow(20f, Color.RED).buildFocusSelectorDrawable()
+        view11.background =
+            Effects.withDraw().setShadow(20f, Color.RED).buildFocusStateListDrawable()
         view11.setPadding(20, 20, 20, 20)
         //阴影
         view33.background =
-            Effects.withDraw().setStroke(10f, Color.GREEN).buildFocusSelectorDrawable()
+            Effects.withDraw().setStroke(10f, Color.GREEN).buildFocusStateListDrawable()
         //边框 + contentGap
         view44.background =
             Effects.withDraw().setStroke(10f, Color.CYAN).setCornerRadius(20f).setContentCap(10f)
-                .buildFocusSelectorDrawable()
+                .buildFocusStateListDrawable()
         //阴影 + 边框
         view55.background = Effects.withDraw().setShadow(20f, 20f, 20f, 40f, Color.BLACK)
             .setCornerRadius(10f)
-            .setContentCap(30f)
-            .setStroke(20f, Color.RED).buildFocusSelectorDrawable()
+//            .setContentCap(30f)
+            .setStroke(resources.getDimension(R.dimen.testCornerDimen), Color.RED)
+            .buildFocusStateListDrawable()
 
         //异性圆角 + 阴影 + 边框 + contentGap
         view66.background = Effects.withDraw()
@@ -104,7 +107,7 @@ class EffectSampleActivity : AppCompatActivity() {
             .setCornerRadii(floatArrayOf(20f, 20f, 0f, 0f, 20f, 20f, 0f, 0f))
             .setStroke(10f, Color.MAGENTA)
             .setContentCap(10f)
-            .buildFocusSelectorDrawable()
+            .buildFocusStateListDrawable()
 
     }
 }

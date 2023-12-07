@@ -196,12 +196,13 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/image55"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
+                    android:src="@drawable/hellowrold"
+                    app:shapeAppearanceOverlay="@style/RoundedMedium" />
             </unics.okeffect.sample.FrameLayout2>
 
             <FrameLayout
@@ -234,8 +235,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:clipChildren="false">
+            android:clipChildren="false"
+            android:orientation="horizontal">
 
             <FrameLayout
                 android:layout_width="100dp"
@@ -246,9 +247,9 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 app:ed_inject="true"
-                app:ed_useDraw="true"
                 app:ed_shadowColor="#ed82af"
-                app:ed_shadowSize="12dp">
+                app:ed_shadowSize="12dp"
+                app:ed_useDraw="true">
 
                 <ImageView
                     android:layout_width="100dp"
@@ -266,11 +267,11 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 app:ed_inject="true"
-                app:ed_useDraw="true"
                 app:ed_shadowColor="#1dce0a"
                 app:ed_shadowSize="20dp"
                 app:ed_strokeColor="#ff00ff"
-                app:ed_strokeSize="2dp">
+                app:ed_strokeSize="2dp"
+                app:ed_useDraw="true">
 
                 <ImageView
                     android:layout_width="100dp"
@@ -316,6 +317,9 @@
                     android:src="@drawable/hellowrold" />
             </FrameLayout>
         </LinearLayout>
+
+
+
 
     </LinearLayout>
 </ScrollView>

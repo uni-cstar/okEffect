@@ -20,7 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.annotation.StyleRes;
-
+import androidx.core.content.res.ResourcesCompat;
 
 /**
  * Create by luochao
@@ -37,15 +37,48 @@ public class Effects {
 
     public static final int[][] FOCUSED_PRESSED_STATES = new int[][]{new int[]{android.R.attr.state_focused}, new int[]{}};
 
+    /**
+     * 创建的EffectDrawable默认使用负inset
+     */
+    static final boolean DEFAULT_EFFECT_DRAWABLE_USE_NEGATIVE_INSET = true;
+
+    /**
+     * EffectLayout默认使用负margin
+     */
+    static final boolean DEFAULT_EFFECT_LAYOUT_USE_NEGATIVE_MARGIN = true;
+
+    /**
+     * 边框圆角绘制优化自定处理所判断的边框大小限定值，超过该值才会启用边框（阴影）圆角绘制优化
+     */
+    @Px
+    static final int STOKE_THICK_LIMIT = 6;
+
+    /**
+     * 是否启用自动优化边框绘制，默认开启
+     *
+     * @see #setAutoOptStrokeCorner
+     */
+    static boolean mAutoOptStrokeCorner = true;
+
+    /**
+     * 是否优化边框外圆角半径，默认开启
+     * 开启的情况下有如下两种处理规则：
+     * 1、如果采用的自定义效果{@link DrawBuilder}，则边框的外圆角半径会增大半个边框大小,如果还存在阴影的话，阴影的绘制区域会往内扩大半个边框区域大小
+     * 2、如果采用的是.9图效果{@link NinePathBuilder},则边框的外圆半径不会增大半个边框
+     */
     static final boolean DEFAULT_ENABLE_OPT_OUT_CORNER = true;
 
+    /**
+     * 用于配置全局的焦点默认效果Style
+     */
     @StyleRes
     public static int defaultEffectDrawableStyleRes = 0;
 
-    static boolean mAutoOptStrokeCorner = true;
-
-    static final int STOKE_THICK_LIMIT = 6;
-
+    /**
+     * 是否启用自动边框圆角绘制优化；即当边框的大小超过{@link #STOKE_THICK_LIMIT},则进行绘制优化。
+     *
+     * @param enable 是否启用，默认开启
+     */
     public static void setAutoOptStrokeCorner(boolean enable) {
         mAutoOptStrokeCorner = enable;
     }
@@ -55,83 +88,113 @@ public class Effects {
      *
      * @param rid .9图资源id
      */
+    @NonNull
     public static NinePathBuilder withNinePath(Context context, @DrawableRes int rid) {
-        Drawable drawable = context.getResources().getDrawable(rid);
+        Drawable drawable = ResourcesCompat.getDrawable(context.getResources(), rid, context.getTheme());
         if (drawable instanceof NinePatchDrawable) {
             return withNinePath((NinePatchDrawable) drawable);
         }
-        throw new RuntimeException(" the res #id(=" + rid + ") or drawable isn't a nine path drawable.");
+        throw new RuntimeException(" the drawable of the res #id(=" + rid + ") isn't a nine path drawable.");
     }
 
     /**
-     * 基于.9图创建效果Drawable
+     * 基于.9图的构造器
      */
+    @NonNull
     public static NinePathBuilder withNinePath(NinePatchDrawable drawable) {
         return new NinePathBuilder(drawable);
     }
 
     /**
-     * 自定义绘制效果drawable
+     * 基于自定义绘制的构造器
      */
+    @NonNull
     public static DrawBuilder withDraw() {
         return new DrawBuilder();
     }
 
-    public static Builder withAttrs(@NonNull Context context, @Nullable AttributeSet attrs) {
+    /**
+     * 通过属性解析构造
+     *
+     * @return 如果设置属性{@link R.styleable.EffectDrawable_ed_useDraw}设置为true，则会使用{@link DrawBuilder}，否则会根据是否设置了.9图(设置了{@link R.styleable.EffectDrawable_ed_ninePathSrc}属性,并且指定的图片必须是.9图)而选择使用{@link NinePathBuilder}还是{@link DrawBuilder}
+     */
+    @NonNull
+    public static Builder<?, ?> withAttrs(@NonNull Context context, @Nullable AttributeSet attrs) {
         return withAttrs(context, attrs, R.attr.effectDrawableStyle);
     }
 
-    public static Builder withAttrs(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    /**
+     * 通过属性解析构造
+     *
+     * @return 如果设置属性 {@link R.styleable.EffectDrawable_ed_useDraw}设置为true，则会使用{@link DrawBuilder}，否则会根据是否设置了.9图(设置了{@link R.styleable.EffectDrawable_ed_ninePathSrc}属性,并且指定的图片必须是.9图)而选择使用{@link NinePathBuilder}还是{@link DrawBuilder}
+     */
+    @NonNull
+    public static Builder<?, ?> withAttrs(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         return withAttrs(context, attrs, defStyleAttr, 0);
     }
 
     /**
-     * 通过属性构造
+     * 通过属性解析构造
      *
-     * @param context
-     * @param attrs
-     * @param defStyleAttr
+     * @return 如果设置属性{@link R.styleable.EffectDrawable_ed_useDraw}设置为true，则会使用{@link DrawBuilder}，否则会根据是否设置了.9图(设置了{@link R.styleable.EffectDrawable_ed_ninePathSrc}属性,并且指定的图片必须是.9图)而选择使用{@link NinePathBuilder}还是{@link DrawBuilder}
      */
-    public static Builder withAttrs(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
+    @NonNull
+    public static Builder<?, ?> withAttrs(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EffectDrawable, defStyleAttr, defStyleRes);
-        Builder builder = withAttrs(ta);
+        Builder<?, ?> builder = withAttrs(ta);
         ta.recycle();
         return builder;
     }
 
-    static Builder withAttrs(TypedArray ta) {
-        Builder builder;
-        boolean forceDraw = ta.getBoolean(R.styleable.EffectDrawable_ed_useDraw, false);
-        if (forceDraw) {
-            builder = withDraw();
-        } else {
-            Drawable npd = ta.getDrawable(R.styleable.EffectDrawable_ed_ninePathSrc);
-            if (!(npd instanceof NinePatchDrawable)) {
-                builder = withDraw();
-            } else {
-                builder = withNinePath((NinePatchDrawable) npd);
-            }
-        }
-        builder.loadAttrs(ta);
-        return builder;
-    }
-
+    /**
+     * 绑定属性解析工厂；必须在调用super.{@link Activity#onCreate(Bundle)}方法之前调用该方法
+     * 使用该工厂支持xml中在任意view上使用自定义的effect相关属性，属性解析之后会生成背景图作为该view的背景
+     *
+     * @see #applyInjectFactory2(Activity, LayoutInflater.Factory2)
+     */
     public static void applyInjectFactory2(@NonNull Activity activity) {
         applyInjectFactory2(activity, null);
     }
 
     /**
-     * 绑定自动属性注入工厂；必须在调用super.{@link Activity#onCreate(Bundle)}方法之前调用该方法
+     * 绑定属性解析工厂；必须在调用super.{@link Activity#onCreate(Bundle)}方法之前调用该方法
+     * 使用该工厂支持xml中在任意view上使用自定义的effect相关属性，属性解析之后会生成背景图作为该view的背景
      *
-     * @param activity
-     * @param custom
+     * @param custom 用户的自定义Factory2
+     * @see #applyInjectFactory2(Activity)
      */
     public static void applyInjectFactory2(@NonNull Activity activity, @Nullable LayoutInflater.Factory2 custom) {
         EffectInjectFactory2 factory2 = new EffectInjectFactory2(activity, custom);
         activity.getLayoutInflater().setFactory2(factory2);
     }
 
-    public static abstract class Builder<T extends Builder, P extends EffectParams> {
+    @NonNull
+    static Builder<?, ?> withAttrs(TypedArray ta) {
+        Builder<?, ?> builder;
+        boolean forceDraw = ta.getBoolean(R.styleable.EffectDrawable_ed_useDraw, false);
+        if (forceDraw) {
+            builder = withDraw();
+        } else {
+            Drawable npd = ta.getDrawable(R.styleable.EffectDrawable_ed_ninePathSrc);
+            if (!(npd instanceof NinePatchDrawable))
+                throw new RuntimeException("ed_ninePathSrc must be a nine patch drawable.");
+            builder = withNinePath((NinePatchDrawable) npd);
+        }
+        builder.loadAttrs(ta);
+        return builder;
+    }
+
+    /**
+     * 构建焦点selector
+     */
+    @NonNull
+    static Drawable createFocusStateListDrawable(@NonNull Drawable drawable) {
+        StateListDrawable sld = new StateListDrawable();
+        sld.addState(FOCUSED_PRESSED_STATES[0], drawable);
+        return sld;
+    }
+
+    public static abstract class Builder<T extends Builder<?, ?>, P extends EffectParams> {
 
         float mStrokeSize;
         int mStrokeColor;
@@ -140,21 +203,28 @@ public class Effects {
         float mCornerRadius;
         float[] mCornerRadii;
 
+        /**
+         * 是否使用负InsetDrawable
+         */
+        boolean mUseNegativeInsetDrawable;
 
         @CallSuper
-        public T loadAttrs(TypedArray ta) {
+        public T loadAttrs(@NonNull TypedArray ta) {
             mStrokeSize = ta.getDimensionPixelSize(R.styleable.EffectDrawable_ed_strokeSize, 0);
             mStrokeColor = ta.getColor(R.styleable.EffectDrawable_ed_strokeColor, Color.TRANSPARENT);
             mContentGap = ta.getDimensionPixelSize(R.styleable.EffectDrawable_ed_contentGap, 0);
-            float cornerTopLeft = ta.getDimension(R.styleable.EffectDrawable_ed_cornerSizeTopLeft, 0f);
-            float cornerTopRight = ta.getDimension(R.styleable.EffectDrawable_ed_cornerSizeTopRight, 0f);
-            float cornerBottomRight = ta.getDimension(R.styleable.EffectDrawable_ed_cornerSizeBottomRight, 0f);
-            float cornerBottomLeft = ta.getDimension(R.styleable.EffectDrawable_ed_cornerSizeBottomLeft, 0f);
+            mOptStrokeCorner = ta.getBoolean(R.styleable.EffectDrawable_ed_optStrokeCorner, mAutoOptStrokeCorner && mStrokeSize > STOKE_THICK_LIMIT);
+            float cornerSize = ta.getDimension(R.styleable.EffectDrawable_ed_cornerSize, 0f);
+            float cornerTopLeft = ta.getDimension(R.styleable.EffectDrawable_ed_cornerSizeTopLeft, cornerSize);
+            float cornerTopRight = ta.getDimension(R.styleable.EffectDrawable_ed_cornerSizeTopRight, cornerSize);
+            float cornerBottomRight = ta.getDimension(R.styleable.EffectDrawable_ed_cornerSizeBottomRight, cornerSize);
+            float cornerBottomLeft = ta.getDimension(R.styleable.EffectDrawable_ed_cornerSizeBottomLeft, cornerSize);
             if (cornerTopLeft > 0f || cornerTopRight > 0f || cornerBottomLeft > 0f || cornerBottomRight > 0f) {
                 setCornerRadii(new float[]{cornerTopLeft, cornerTopLeft, cornerTopRight, cornerTopRight, cornerBottomRight, cornerBottomRight, cornerBottomLeft, cornerBottomLeft});
             } else {
                 setCornerRadius(ta.getDimension(R.styleable.EffectDrawable_ed_cornerSize, 0f));
             }
+            mUseNegativeInsetDrawable = ta.getBoolean(R.styleable.EffectLayout_ed_useNegativeMargin, DEFAULT_EFFECT_DRAWABLE_USE_NEGATIVE_INSET);
             return (T) this;
         }
 
@@ -193,10 +263,16 @@ public class Effects {
         }
 
         /**
-         * 是否设置优化边框圆角处的绘制
+         * 是否设置优化边框圆角处的绘制;
+         * 解释：
+         * 如果边框存在圆角，绘制的时候，是按照边框的中线进行绘制，即保障的是边框中线的圆角值，这样造成的效果是绘制出来的边框的内边和外边与实际的圆角值不相等，内边框的圆角值小，外边框更大，
+         * 造成实际的效果就是边框内边圆角更小，与内部内容圆角不一致，还会形成空隙；如果还存在同样角度的阴影，由于边框外边框圆角更大，也会与绘制的阴影间形成空隙；
+         * 因此开启此配置，会保证内外边框圆角均为设定的值，这样边框会与内外内容的圆角一致并贴合；
+         * 但是这样也会造成一个问题，就是圆角处的边框线看会比直线部分更厚（更粗）；解决办法就优化圆角处的外边框线圆角半径，目前已默认开启该配置（没理由不开启，二次优化会让整个绘制效果开起来更好），具体查看{@link #DEFAULT_ENABLE_OPT_OUT_CORNER}
          *
-         * @param enable
-         * @return
+         * @param enable 是否开启
+         * @see EffectParams#optStrokeCorner()
+         * @see #setAutoOptStrokeCorner
          */
         public T setOptStrokeCorner(boolean enable) {
             mOptStrokeCorner = enable;
@@ -235,32 +311,30 @@ public class Effects {
             return (T) this;
         }
 
+        public T setUseNegativeInsetDrawable(boolean useNegativeInset) {
+            mUseNegativeInsetDrawable = useNegativeInset;
+            return (T) this;
+        }
+
         /**
          * 构建效果参数
          */
         public abstract P buildParams();
 
         /**
-         * 构建效果Drawable
+         * 创建Drawable
          */
+        @NonNull
         public Drawable buildDrawable() {
-            EffectParams params = buildParams();
-            if (params instanceof EffectParams.NinePathEffectParams) {
-                return EffectDrawableFactory.NinePath.getInstance().create((EffectParams.NinePathEffectParams) params);
-            } else if (params instanceof EffectParams.DrawEffectParams) {
-                return EffectDrawableFactory.Draw.getInstance().create((EffectParams.DrawEffectParams) params);
-            } else {
-                throw new IllegalArgumentException("un support effect params type.");
-            }
+            return EffectDrawableFactory.createEffectDrawable(buildParams());
         }
 
         /**
          * 构建焦点selector
          */
-        public Drawable buildFocusSelectorDrawable() {
-            StateListDrawable sld = new StateListDrawable();
-            sld.addState(FOCUSED_PRESSED_STATES[0], buildDrawable());
-            return sld;
+        @NonNull
+        public Drawable buildFocusStateListDrawable() {
+            return createFocusStateListDrawable(buildDrawable());
         }
 
     }
@@ -281,6 +355,11 @@ public class Effects {
             return new EffectParams.NinePathDrawableEffectParamsImpl(this);
         }
 
+        @Override
+        @NonNull
+        public Drawable buildDrawable() {
+            return EffectDrawableFactory.NinePath.getInstance().create(buildParams());
+        }
     }
 
     /**
@@ -295,14 +374,26 @@ public class Effects {
         int mShadowColor;
 
         @Override
-        public DrawBuilder loadAttrs(TypedArray ta) {
+        public EffectParams.DrawEffectParams buildParams() {
+            return new EffectParams.DrawEffectParamsImpl(this);
+        }
+
+        @Override
+        @NonNull
+        public Drawable buildDrawable() {
+            return EffectDrawableFactory.Draw.getInstance().create(buildParams());
+        }
+
+        @Override
+        public DrawBuilder loadAttrs(@NonNull TypedArray ta) {
+            super.loadAttrs(ta);
             float shadowSize = ta.getDimension(R.styleable.EffectDrawable_ed_shadowSize, 0f);
             mShadowLeft = ta.getDimension(R.styleable.EffectDrawable_ed_shadowSizeLeft, shadowSize);
             mShadowTop = ta.getDimension(R.styleable.EffectDrawable_ed_shadowSizeTop, shadowSize);
             mShadowRight = ta.getDimension(R.styleable.EffectDrawable_ed_shadowSizeRight, shadowSize);
             mShadowBottom = ta.getDimension(R.styleable.EffectDrawable_ed_shadowSizeBottom, shadowSize);
             mShadowColor = ta.getColor(R.styleable.EffectDrawable_ed_shadowColor, Color.TRANSPARENT);
-            return super.loadAttrs(ta);
+            return this;
         }
 
         public DrawBuilder setShadow(@Px float size, @ColorInt int color) {
@@ -332,11 +423,6 @@ public class Effects {
         public DrawBuilder setShadowColor(@ColorInt int color) {
             mShadowColor = color;
             return this;
-        }
-
-        @Override
-        public EffectParams.DrawEffectParams buildParams() {
-            return new EffectParams.DrawEffectParamsImpl(this);
         }
 
     }
