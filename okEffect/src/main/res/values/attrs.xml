@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--主题属性-->
+    <attr name="effectDrawableStyle" format="reference" />
+
+    <!--是否注入效果：该属性要结合[EffectInjectFactory2]使用才能发挥作用（通过Effects#applyInjectFactory2方法启用）-->
+    <attr name="ed_inject" format="boolean" />
+
+    <!--使用.9图方式，该方式优先级高于canvas绘制方式，即设置了.9图时不会在处理canvas绘制所需属性-->
+    <attr name="ed_ninePathSrc" format="reference" />
+
+    <!--是否强制使用canvas绘制方式：
+    在ed_ninePathSrc属性时，会采用.9图的实现方式而忽略canvas绘制相关的属性；
+    如果在全局主题中配置了ed_ninePathSrc属性，而xml中布局想使用绘制方式时，可以将本属性设置为true，这样就会忽略ed_ninePathSrc而采用绘制方式实现-->
+    <attr name="ed_useDraw" format="boolean" />
+
+    <!--绘制的效果的边界类型-->
+    <attr name="ed_boundsType" format="flags">
+        <!--在控件区域外，不占用控件空间，默认使用该类型（但由于显示在控件之外，需要该view所在的Parent设置clipChildren=false：甚至是parent的parent...）-->
+        <flag name="out" value="0" />
+        <!--在控件区域内，所占区域会被描述为padding值-->
+        <flag name="padding" value="1" />
+    </attr>
+
+    <!--绘制的效果与内容布局之间的间距，默认0-->
+    <attr name="ed_contentGap" format="dimension|reference" />
+
+    <!--四个角圆角大小-->
+    <attr name="ed_cornerSize" format="dimension|reference" />
+    <!--左上圆角大小-->
+    <attr name="ed_cornerSizeTopLeft" format="dimension|reference" />
+    <!--右上圆角大小-->
+    <attr name="ed_cornerSizeTopRight" format="dimension|reference" />
+    <!--右下圆角大小-->
+    <attr name="ed_cornerSizeBottomRight" format="dimension|reference" />
+    <!--左下圆角大小-->
+    <attr name="ed_cornerSizeBottomLeft" format="dimension|reference" />
+
+    <!--NOTICE：以下属性只对Canvas绘制方式生效，对.9图效果不生效-->
+    <!--边框宽度-->
+    <attr name="ed_strokeSize" format="dimension|reference" />
+    <!--边框颜色-->
+    <attr name="ed_strokeColor" format="color|reference" />
+    <!--是否优化边框圆角：具体查看代码注释；@{link DrawBuilder#setOptStrokeCorner}-->
+    <attr name="ed_optStrokeCorner" format="boolean" />
+    <!--阴影颜色-->
+    <attr name="ed_shadowColor" format="color|reference" />
+    <!--阴影大小-->
+    <attr name="ed_shadowSize" format="dimension|reference" />
+    <!--阴影左侧大小-->
+    <attr name="ed_shadowSizeLeft" format="dimension|reference" />
+    <!--阴影顶部大小-->
+    <attr name="ed_shadowSizeTop" format="dimension|reference" />
+    <!--阴影右侧大小-->
+    <attr name="ed_shadowSizeRight" format="dimension|reference" />
+    <!--阴影底部大小-->
+    <attr name="ed_shadowSizeBottom" format="dimension|reference" />
+
+    <!--NOTICE:以下属性只对自定义布局生效-->
+    <attr name="ed_drawingOrderType" format="flags">
+        <!--在视图顶部(默认值)-->
+        <flag name="top" value="0" />
+        <!--在视图底部-->
+        <flag name="bottom" value="1" />
+    </attr>
+
+    <declare-styleable name="EffectDrawable">
+        <attr name="ed_inject" />
+        <attr name="ed_boundsType" />
+        <attr name="ed_ninePathSrc" />
+        <attr name="ed_useDraw" />
+        <attr name="ed_strokeSize" />
+        <attr name="ed_strokeColor" />
+        <attr name="ed_optStrokeCorner" />
+        <attr name="ed_contentGap" />
+        <attr name="ed_cornerSize" />
+        <attr name="ed_cornerSizeTopLeft" />
+        <attr name="ed_cornerSizeTopRight" />
+        <attr name="ed_cornerSizeBottomRight" />
+        <attr name="ed_cornerSizeBottomLeft" />
+
+        <!--自定义绘制支持：-->
+        <attr name="ed_shadowColor" />
+        <attr name="ed_shadowSize" />
+        <attr name="ed_shadowSizeLeft" />
+        <attr name="ed_shadowSizeTop" />
+        <attr name="ed_shadowSizeRight" />
+        <attr name="ed_shadowSizeBottom" />
+
+        <!--EffectLayout支持：-->
+        <attr name="ed_drawingOrderType" />
+    </declare-styleable>
+
+    <declare-styleable name="EffectFrameLayout">
+        <attr name="ed_boundsType" />
+        <attr name="ed_ninePathSrc" />
+        <attr name="ed_useDraw" />
+        <attr name="ed_strokeSize" />
+        <attr name="ed_strokeColor" />
+        <attr name="ed_optStrokeCorner" />
+        <attr name="ed_contentGap" />
+        <attr name="ed_cornerSize" />
+        <attr name="ed_cornerSizeTopLeft" />
+        <attr name="ed_cornerSizeTopRight" />
+        <attr name="ed_cornerSizeBottomRight" />
+        <attr name="ed_cornerSizeBottomLeft" />
+
+        <attr name="ed_shadowColor" />
+        <attr name="ed_shadowSize" />
+        <attr name="ed_shadowSizeLeft" />
+        <attr name="ed_shadowSizeTop" />
+        <attr name="ed_shadowSizeRight" />
+        <attr name="ed_shadowSizeBottom" />
+
+        <attr name="ed_drawingOrderType" />
+    </declare-styleable>
+
+    <declare-styleable name="EffectRelativeLayout">
+        <attr name="ed_boundsType" />
+        <attr name="ed_ninePathSrc" />
+        <attr name="ed_useDraw" />
+        <attr name="ed_strokeSize" />
+        <attr name="ed_strokeColor" />
+        <attr name="ed_optStrokeCorner" />
+        <attr name="ed_contentGap" />
+        <attr name="ed_cornerSize" />
+        <attr name="ed_cornerSizeTopLeft" />
+        <attr name="ed_cornerSizeTopRight" />
+        <attr name="ed_cornerSizeBottomRight" />
+        <attr name="ed_cornerSizeBottomLeft" />
+
+        <attr name="ed_shadowColor" />
+        <attr name="ed_shadowSize" />
+        <attr name="ed_shadowSizeLeft" />
+        <attr name="ed_shadowSizeTop" />
+        <attr name="ed_shadowSizeRight" />
+        <attr name="ed_shadowSizeBottom" />
+
+        <attr name="ed_drawingOrderType" />
+    </declare-styleable>
+</resources>

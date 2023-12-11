@@ -6,14 +6,62 @@
     </style>
 
     <style name="DefaultEffectDrawable">
-        <item name="ed_ninePathSrc">@drawable/shadow_default</item>
+        <item name="ed_ninePathSrc">@drawable/app_shadow</item>
     </style>
 
-    <dimen name="testCornerDimen">12px</dimen>
+    <dimen name="ImageSize">100dp</dimen>
+    <style name="ImageViewStyle">
+        <item name="android:layout_width">@dimen/ImageSize</item>
+        <item name="android:layout_height">@dimen/ImageSize</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:src">@drawable/hellowrold</item>
+    </style>
+
+    <dimen name="cornerCode">10dp</dimen>
+    <style name="LTBRCornerCode">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/cornerCode</item>
+        <item name="cornerSizeBottomRight">@dimen/cornerCode</item>
+    </style>
+
+    <style name="RoundedCode">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/cornerCode</item>
+    </style>
+
+    <style name="CircleCode">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+
+
+    <dimen name="cornerNinePatch">12px</dimen>
+    <style name="RoundedNinePatch">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/cornerNinePatch</item>
+    </style>
+
+    <style name="RoundedNinePatchSpec">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">12px</item>
+        <item name="cornerSizeTopRight">40px</item>
+        <item name="cornerSizeBottomRight">12px</item>
+        <item name="cornerSizeBottomLeft">40px</item>
+    </style>
+
+
+    <dimen name="testShadowSize">15dp</dimen>
 
     <style name="RoundedMedium">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">12px</item>
+        <item name="cornerSize">@dimen/cornerNinePatch</item>
+    </style>
+
+    <style name="LTBRCorner">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/cornerNinePatch</item>
+        <item name="cornerSizeBottomRight">@dimen/cornerNinePatch</item>
     </style>
 
     <style name="RoundedMedium2">

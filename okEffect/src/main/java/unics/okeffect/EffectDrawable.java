@@ -9,7 +9,6 @@ import android.graphics.Outline;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -17,17 +16,17 @@ import androidx.annotation.RequiresApi;
 /**
  * Create by luochao
  * on 2023/12/8
- * 设计理念：让本Drawable的bounds跟view的bounds一样，但是让内部的drawable的bounds超过区域,其实用InsetDrawable传递负inset即可实现
+ * 设计理念：让本Drawable的bounds跟view的bounds一样，但是让内部的drawable的bounds超过区域,其实用InsetDrawable传递负inset也可实现
  */
 class EffectDrawable extends Drawable {
 
     /**
-     * 效果区域在bounds外：即Effect占用的区域不占用控件区域，也不作为padding返回
+     * 绘制效果在控件bounds外，不占用控件区域，也不作为padding返回
      */
     public static final int BOUNDS_TYPE_OUTER = 0;
 
     /**
-     * 效果区域在bounds内：即Effect占用控件区域，作为padding部分
+     * 绘制效果在控件bounds内，占用控件区域，作为padding部分
      */
     public static final int BOUNDS_TYPE_PADDING = 1;
 
@@ -48,10 +47,12 @@ class EffectDrawable extends Drawable {
     //效果是否占Bounds区域
     private int mEffectBoundsType = BOUNDS_TYPE_OUTER;
 
+    //四周大小
     private final int mEffectLeft, mEffectTop, mEffectRight, mEffectBottom;
 
     /**
      * @param content             实际绘制的drawable
+     * @param boundsType          绘制位置类型
      * @param hardwareAccelerated 是否启用硬件加速优化
      */
     public EffectDrawable(@NonNull Drawable content, int effectLeft, int effectTop, int effectRight, int effectBottom, int boundsType, boolean hardwareAccelerated) {
@@ -72,8 +73,8 @@ class EffectDrawable extends Drawable {
     }
 
     /**
-     * 是否启用图像缓存；只在需要硬件加速的情况下有效果
-     * 该配置生效的情况下，只要图像的大小没有发生变化，则会复用之前的缓存图像，否则每次绘制都会创建新的图像
+     * 是否启用图像缓存；该配置生效的情况下，只要图像的大小没有发生变化，则会复用之前的缓存图像，否则每次绘制都会创建新的图像。<br>
+     * tips:{@link #mHardwareAccelerated}为true时，该配置才生效；<br>
      */
     public void setDrawingCacheEnable(boolean enable) {
         if (mDrawingCacheEnable == enable)
@@ -81,16 +82,19 @@ class EffectDrawable extends Drawable {
         mDrawingCacheEnable = enable;
     }
 
+    //创建缓存图像
     private Bitmap createDrawingCache(int width, int height) {
+        //释放之前的缓存
         if (mDrawingCaching != null) {
             mDrawingCaching.recycle();
+            mDrawingCaching = null;
         }
         return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
     }
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-        Log.d("okEffects", "draw: ");
+        Effects.log("draw: ");
         //兼容硬件加速并且图层也是硬件加速的图层，则执行优化
         if (mHardwareAccelerated && canvas.isHardwareAccelerated()) {
             final Rect bounds = mDrawable.getBounds();
@@ -110,7 +114,7 @@ class EffectDrawable extends Drawable {
 
     @Override
     public boolean getPadding(Rect padding) {
-        //需要手动调一下drawable内部的padding，否则可能会引起问题
+        //需要主动调用内部Drawable的方法，否则可能存在某些Drawable内部的padding计算未生效
         mDrawable.getPadding(padding);
         if (mEffectBoundsType == BOUNDS_TYPE_OUTER) {
             return super.getPadding(padding);
@@ -131,8 +135,8 @@ class EffectDrawable extends Drawable {
     protected void onBoundsChange(@NonNull Rect bounds) {
         super.onBoundsChange(bounds);
         mDrawingCacheIsDirty = true;
-        //让drawable在实际的bounds基础上往外扩区域
         if (mEffectBoundsType == BOUNDS_TYPE_OUTER) {
+            //让drawable在实际的bounds基础上往外扩区域
             mDrawable.setBounds(bounds.left - mEffectLeft, bounds.top - mEffectTop, bounds.right + mEffectRight, bounds.bottom + mEffectBottom);
         } else {
             mDrawable.setBounds(bounds);

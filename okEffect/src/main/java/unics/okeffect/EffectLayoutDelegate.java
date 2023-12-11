@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -23,7 +22,7 @@ import androidx.annotation.Nullable;
 class EffectLayoutDelegate {
 
     /**
-     * 代理需要反向注入调用的方法
+     * 代理依赖注入回调的方法
      */
     interface DI {
         int superGetChildDrawingOrder(int childCount, int drawingPosition);
@@ -31,7 +30,14 @@ class EffectLayoutDelegate {
         void superOnMeasure(int widthMeasureSpec, int heightMeasureSpec);
     }
 
+    /**
+     * 绘制在顶部
+     */
     static final int DRAWING_ORDER_TYPE_TOP = 0;
+
+    /**
+     * 绘制在底部
+     */
     static final int DRAWING_ORDER_TYPE_BOTTOM = 1;
 
     private final ViewGroup mViewGroup;
@@ -77,9 +83,9 @@ class EffectLayoutDelegate {
         //关键点3：阴影的绘制需要关闭硬件加速：奇怪的是在一款小米手机上（Android10）没有关闭硬件加速但是效果也绘制出来了
         if (mEffectParams.containSoftwareLayer()) {
             mEffectView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            Log.d("okEffect", "setupEffectView: shouldUseSoftwareLayer=true");
+            Effects.log("setupEffectView: shouldUseSoftwareLayer=true");
         } else {
-            Log.d("okEffect", "setupEffectView: shouldUseSoftwareLayer=false");
+            Effects.log("setupEffectView: shouldUseSoftwareLayer=false");
         }
 
         mViewGroup.addView(mEffectView);
@@ -88,7 +94,7 @@ class EffectLayoutDelegate {
     /**
      * 用于版本兼容：在{@link android.os.Build.VERSION_CODES#N}之前，如果childView设置的LayoutParams与{@link #mViewGroup}类型不同，会导致添加到ViewGroup中时margin被忽略
      *
-     * @see View.sPreserveMarginParamsInLayoutParamConversion （包访问）{@link android.os.Build.VERSION_CODES#N}即以后的源码中有该变量的定义
+     * @see View#sPreserveMarginParamsInLayoutParamConversion （包访问）{@link android.os.Build.VERSION_CODES#N}即以后的源码中有该变量的定义
      */
     private ViewGroup.LayoutParams generateEffectViewLayoutParams() {
         ViewGroup.MarginLayoutParams layoutParams;
@@ -166,12 +172,15 @@ class EffectLayoutDelegate {
 
     private void setupEffectViewIndex() {
         if (mEffectView == null) {
-            Log.w("okEffect", "EffectLayoutDelegate -> useEffectView,but the effect view is null.");
+            Effects.log("EffectLayoutDelegate -> useEffectView,but the effect view is null.");
             return;
         }
         mEffectViewIndex = mViewGroup.indexOfChild(mEffectView);
     }
 
+    /**
+     * 布局焦点发生变化；暂时预留，后续做扫光支持
+     */
     @CallBy
     void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
 //        //这部分只是预防逻辑，其实可以不用，直接让mEffectView一直显示即可（背景是selector，未选中时没有背景和效果）
@@ -185,10 +194,9 @@ class EffectLayoutDelegate {
     @CallBy
     void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         mDI.superOnMeasure(widthMeasureSpec, heightMeasureSpec);
-        Log.d("EFDelegateG" + this.hashCode(), "onMeasure: gMeasuredWidth=" + mViewGroup.getMeasuredWidth() + " gMeasuredHeight=" + mViewGroup.getMeasuredHeight());
+        Effects.log("DelegateGroup@" + this.hashCode() + " onMeasure: gMeasuredWidth=" + mViewGroup.getMeasuredWidth() + " gMeasuredHeight=" + mViewGroup.getMeasuredHeight());
         if (mEffectView != null) {
             mEffectView.onMeasureSecondary(widthMeasureSpec, heightMeasureSpec, mViewGroup.getMeasuredWidth(), mViewGroup.getMeasuredHeight());
-//            Log.d("EFDelegateG" + this.hashCode(), "onMeasure: gMeasuredWidth=" + mViewGroup.getMeasuredWidth() + " gMeasuredHeight=" + mViewGroup.getMeasuredHeight());
         }
     }
 

@@ -24,3 +24,8 @@
     public *;
     protected * ;
 }
+
+# 保留注解
+-keepattributes *Annotation*
+
+-dontwarn unics.okeffect.annotation.EffectLayout

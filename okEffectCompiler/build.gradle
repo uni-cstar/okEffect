@@ -1,0 +1,28 @@
+
+plugins {
+    id 'java-library'
+    id 'com.vanniktech.maven.publish'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    implementation("io.github.uni-cstar:okCompiler:0.0.1")
+    implementation("io.github.uni-cstar:okEffectAnnotation:1.0.1")
+//    implementation project(path:":okEffectAnnotation")
+
+    def autoServiceVer = '1.0.1'
+    /*注解处理器:只参与编译，不用依赖进来*/
+    compileOnly "com.google.auto.service:auto-service:$autoServiceVer"
+    annotationProcessor "com.google.auto.service:auto-service:$autoServiceVer"
+}
+
+tasks.withType(Javadoc) {
+    failOnError false
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}

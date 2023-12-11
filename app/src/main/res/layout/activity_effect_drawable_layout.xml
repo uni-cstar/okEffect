@@ -3,26 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clipChildren="false"
     android:fillViewport="true">
 
     <LinearLayout
         android:id="@+id/c0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:layout_marginLeft="25dp"
+        android:background="#44ff30cf"
         android:clipChildren="false"
         android:orientation="vertical">
 
-        <FrameLayout
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
+            android:text="样本图片大小：100x100dp(可以点击,不能选中)" />
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/hellowrold" />
+        <FrameLayout
+            android:id="@+id/clickLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView style="@style/ImageViewStyle" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -36,6 +40,11 @@
                 android:textColor="@android:color/white" />
         </FrameLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="代码创建Drawable作为Background" />
 
         <LinearLayout
             android:id="@+id/testGroup"
@@ -45,55 +54,38 @@
             android:orientation="horizontal">
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:clipChildren="false">
+                android:id="@+id/layout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
-                <FrameLayout
-                    android:id="@+id/layout1"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true">
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/hellowrold" />
-                </FrameLayout>
+                <ImageView style="@style/ImageViewStyle" />
             </FrameLayout>
 
-
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:id="@+id/layout12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:clipChildren="false">
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
-                <FrameLayout
-                    android:id="@+id/layout12"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true">
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/hellowrold" />
-                </FrameLayout>
+                <com.google.android.material.imageview.ShapeableImageView
+                    style="@style/ImageViewStyle"
+                    app:shapeAppearanceOverlay="@style/RoundedNinePatch" />
             </FrameLayout>
 
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="自定义Layout" />
 
         <LinearLayout
             android:id="@+id/effectGroup2"
@@ -103,118 +95,148 @@
             android:clipToPadding="false"
             android:orientation="horizontal">
 
-            <unics.okeffect.EffectLayoutTemplate
-                android:id="@+id/effectLayout2"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginLeft="25dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                app:ed_cornerSize="12px"
-                app:ed_drawingOrderType="bottom"
-                app:ed_optStrokeCorner="true"
-                app:ed_useDraw="false">
+<!--            <unics.okeffect.EffectFrameLayout-->
+<!--                android:id="@+id/effectLayout2"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true"-->
+<!--                android:focusableInTouchMode="true"-->
+<!--                app:ed_cornerSizeBottomRight="@dimen/cornerCode"-->
+<!--                app:ed_cornerSizeTopLeft="@dimen/cornerCode"-->
+<!--                app:ed_drawingOrderType="bottom"-->
+<!--                app:ed_shadowColor="#00008B"-->
+<!--                app:ed_shadowSize="@dimen/testShadowSize"-->
+<!--                app:ed_useDraw="true">-->
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/effectImage2"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold"
-                    app:shapeAppearanceOverlay="@style/RoundedMedium" />
+<!--                <com.google.android.material.imageview.ShapeableImageView-->
+<!--                    android:id="@+id/effectImage2"-->
+<!--                    style="@style/ImageViewStyle"-->
+<!--                    app:shapeAppearanceOverlay="@style/LTBRCornerCode" />-->
 
-            </unics.okeffect.EffectLayoutTemplate>
+<!--            </unics.okeffect.EffectFrameLayout>-->
 
-            <unics.okeffect.EffectLayoutTemplate
-                android:id="@+id/effectLayout22"
+<!--            <unics.okeffect.EffectFrameLayout-->
+<!--                android:id="@+id/effectLayout22"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="50dp"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true"-->
+<!--                android:focusableInTouchMode="true"-->
+<!--                app:ed_cornerSize="@dimen/cornerCode"-->
+<!--                app:ed_drawingOrderType="bottom"-->
+<!--                app:ed_optStrokeCorner="true"-->
+<!--                app:ed_shadowColor="#3CB371"-->
+<!--                app:ed_shadowSize="@dimen/testShadowSize"-->
+<!--                app:ed_strokeColor="#00FA9A"-->
+<!--                app:ed_strokeSize="2dp"-->
+<!--                app:ed_useDraw="true">-->
+
+<!--                <com.google.android.material.imageview.ShapeableImageView-->
+<!--                    android:id="@+id/effectImage22"-->
+<!--                    style="@style/ImageViewStyle"-->
+<!--                    app:shapeAppearanceOverlay="@style/RoundedCode" />-->
+
+<!--            </unics.okeffect.EffectFrameLayout>-->
+
+            <unics.okeffect.EffectFrameLayout
+                android:id="@+id/effectLayout23"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
-                app:ed_cornerSize="12px"
-                app:ed_drawingOrderType="bottom"
-                app:ed_optStrokeCorner="true"
-                app:ed_strokeColor="#c13dcd"
-                app:ed_strokeSize="2dp">
+                android:focusableInTouchMode="true">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/effectImage22"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold"
-                    app:shapeAppearanceOverlay="@style/RoundedMedium" />
+                    android:id="@+id/effectImage23"
+                    style="@style/ImageViewStyle"
+                    app:shapeAppearanceOverlay="@style/RoundedCode" />
 
-            </unics.okeffect.EffectLayoutTemplate>
+                <View
+                    android:id="@+id/newVerFlagView"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="right|bottom"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+                <View
+                    android:id="@+id/loading"
+                    style="@style/ImageViewStyle"
+                    android:visibility="gone"/>
+            </unics.okeffect.EffectFrameLayout>
+
         </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="自动为已有的控件注入背景" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="40dp">
 
             <FrameLayout
                 android:id="@+id/layout2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 app:ed_inject="true"
-                app:ed_shadowColor="#1dce0a"
-                app:ed_shadowSize="20dp"
-                app:ed_strokeColor="#ff00ff"
-                app:ed_strokeSize="2dp"
+                app:ed_optStrokeCorner="false"
+                app:ed_shadowColor="#FF4500"
+                app:ed_shadowSize="25dp"
+                app:ed_strokeColor="#F0E68C"
+                app:ed_cornerSize="@dimen/ImageSize"
                 app:ed_useDraw="true">
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    style="@style/ImageViewStyle"
+                    app:shapeAppearanceOverlay="@style/CircleCode" />
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/layout3"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="30dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                app:ed_cornerSize="@dimen/cornerNinePatch"
                 app:ed_inject="true">
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    style="@style/ImageViewStyle"
+                    app:shapeAppearanceOverlay="@style/RoundedNinePatch" />
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/layout4"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 app:ed_inject="true"
+                app:ed_contentGap="4dp"
                 app:ed_ninePathSrc="@drawable/shadow_2">
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    style="@style/ImageViewStyle"
+                    app:shapeAppearanceOverlay="@style/RoundedNinePatchSpec" />
             </FrameLayout>
         </LinearLayout>
 

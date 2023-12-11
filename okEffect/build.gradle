@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'com.vanniktech.maven.publish'
 }
 
 android {
@@ -15,8 +16,8 @@ android {
     }
 
     buildTypes {
-        debug{
-            minifyEnabled true
+        debug {
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
@@ -28,14 +29,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-//    kotlinOptions {
-//        jvmTarget = '1.8'
-//    }
+
 }
 
 dependencies {
 
-//
+    //自动生成的类
+//    annotationProcessor project(path: ':okEffectCompiler')
+//    compileOnly project(path: ':okEffectAnnotation')
+    annotationProcessor 'io.github.uni-cstar:okEffectCompiler:1.0.1'
+    compileOnly 'io.github.uni-cstar:okEffectAnnotation:1.0.1'
+
 //    implementation 'androidx.core:core-ktx:1.8.0'
 //    implementation 'androidx.appcompat:appcompat:1.6.1'
 //    implementation 'com.google.android.material:material:1.9.0'
@@ -44,4 +48,11 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+tasks.withType(Javadoc) {
+    failOnError false
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
 }

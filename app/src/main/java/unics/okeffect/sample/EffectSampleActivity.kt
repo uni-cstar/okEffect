@@ -1,6 +1,5 @@
 package unics.okeffect.sample
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -30,16 +29,16 @@ class EffectSampleActivity : AppCompatActivity() {
             }
         }
 
+        Effects.withAttrs(this, null).into(findViewById<View>(R.id.clickLayout).also {
+            it.isClickable = true
+        })
 
-//        val layout1 = findViewById<View>(R.id.layout1)
-//        layout1.setOnClickListener {
-//            startActivity(Intent(this, EffectLayoutSampleActivity::class.java))
-//        }
-//        val layout12 = findViewById<View>(R.id.layout12)
-//
-//        //阴影 + viewPadding
-//        Effects.withDraw().setShadow(20f, Color.RED).into(layout1)
-//        //阴影
-//        Effects.withNinePath(this, R.drawable.bg_shadow).into(layout12)
+        val layout1 = findViewById<View>(R.id.layout1)
+        val layout12 = findViewById<View>(R.id.layout12)
+
+        //阴影 + viewPadding
+        Effects.withDraw().setShadow(20f, Color.RED).setContentCap(3f).into(layout1)
+        //阴影
+        Effects.withNinePatch(this, R.drawable.bg_shadow).into(layout12)
     }
 }

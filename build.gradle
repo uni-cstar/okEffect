@@ -3,4 +3,9 @@ plugins {
     id 'com.android.application' version '8.0.2' apply false
     id 'com.android.library' version '8.0.2' apply false
     id 'org.jetbrains.kotlin.android' version '1.8.20' apply false
+
+    //https://vanniktech.github.io/gradle-maven-publish-plugin/central/
+    id "com.vanniktech.maven.publish" version "0.30.0"
+    //自动发布命令（执行所有任务） ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
+    //手动发布命令（需要登录mavenCentral点击release）： ./gradlew publishToMavenCentral --no-configuration-cache
 }

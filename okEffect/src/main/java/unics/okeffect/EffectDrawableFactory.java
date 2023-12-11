@@ -9,10 +9,13 @@ import android.graphics.drawable.LayerDrawable;
 /**
  * Create by luochao
  * on 2023/11/15
- * 效果Drawable构建工厂
+ * Drawable构建工厂
  */
 interface EffectDrawableFactory<T extends EffectParams> {
 
+    /**
+     * 根据配置参数创建Drawable
+     */
     Drawable create(T params);
 
     /**
@@ -35,12 +38,7 @@ interface EffectDrawableFactory<T extends EffectParams> {
         drawable.setColor(params.getShadowColor());
         //阴影圆角绘制优化
         drawable.setOptShadowCorner(params.optStrokeOutCorner(), params.getIncrementStrokeOutCornerRadius());
-        float[] radii = params.getCornerRadii();
-        if (radii != null && radii.length > 0) {
-            drawable.setCornerRadii(radii);
-        } else {
-            drawable.setCornerRadius(params.getCornerRadius());
-        }
+        drawable.setCornerRadii(params.getCornerRadii());
         return drawable;
     }
 
@@ -53,11 +51,7 @@ interface EffectDrawableFactory<T extends EffectParams> {
         drawable.setOptCorner(params.optStrokeCorner());
         drawable.setColor(params.getStrokeColor());
         float[] radii = params.getCornerRadii();
-        if (radii != null && radii.length > 0) {
-            drawable.setCornerRadii(radii);
-        } else {
-            drawable.setCornerRadius(params.getCornerRadius());
-        }
+        drawable.setCornerRadii(radii);
         return drawable;
     }
 
@@ -72,7 +66,7 @@ interface EffectDrawableFactory<T extends EffectParams> {
             Rect rect = Effects.sTmpEffectRect;
             rect.setEmpty();
             params.getEffectRect(rect);
-            return new EffectDrawable(content, rect.left, rect.top, rect.right, rect.bottom,params.getBoundsType(), params.containSoftwareLayer());
+            return new EffectDrawable(content, rect.left, rect.top, rect.right, rect.bottom, params.getBoundsType(), params.containSoftwareLayer());
         } else {
             //在bounds内，则直接返回原始的drawable即可
             return content;

@@ -55,8 +55,6 @@ public class EffectInjectFactory2 implements LayoutInflater.Factory2 {
         if (view == null) {
             if (sDependAppCompat && mActivity instanceof AppCompatActivity) {
                 view = ((AppCompatActivity) mActivity).getDelegate().createView(parent, name, context, attrs);
-                if (view == null && name.startsWith("androidx"))
-                    return null;
             }
             if (view == null) {
                 view = mActivity.onCreateView(parent, name, context, attrs);
@@ -83,7 +81,7 @@ public class EffectInjectFactory2 implements LayoutInflater.Factory2 {
             }
         }
 
-        if (view != null && !(view instanceof EffectLayoutTemplate)) {
+        if (view != null && !(view instanceof EffectLayoutDelegate.DI)) {
             //EffectLayout内部会自己处理effect
             tryInjectEffect(view, context, attrs);
         }
@@ -99,13 +97,7 @@ public class EffectInjectFactory2 implements LayoutInflater.Factory2 {
     private void tryInjectEffect(@NonNull View view, @NonNull Context context, @NonNull AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EffectDrawable, R.attr.effectDrawableStyle, Effects.defaultEffectDrawableStyleRes);
         if (ta.getBoolean(R.styleable.EffectDrawable_ed_inject, false)) {
-            EffectBuilder<?, ?> builder = Effects.withAttrs(ta);
-            int pl = view.getPaddingLeft();
-            int pt = view.getPaddingTop();
-            int pr = view.getPaddingRight();
-            int pb = view.getPaddingBottom();
-            builder.into(view);
-            view.setPadding(pl, pt, pr, pb);
+            Effects.withAttrs(ta).into(view);
         }
         ta.recycle();
     }

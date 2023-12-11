@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -14,9 +13,9 @@ import androidx.annotation.Nullable;
 /**
  * Create by luochao
  * on 2023/11/23
- * 代码模板
+ * okEffectCompiler生成自定义布局参照的代码模板
  */
-public class EffectLayoutTemplate extends FrameLayout implements EffectLayoutDelegate.DI {
+class EffectLayoutTemplate extends FrameLayout implements EffectLayoutDelegate.DI {
 
     private final EffectLayoutDelegate mDelegate;
 
@@ -38,13 +37,6 @@ public class EffectLayoutTemplate extends FrameLayout implements EffectLayoutDel
     }
 
     @Override
-    protected int getChildDrawingOrder(int childCount, int drawingPosition) {
-        int position = mDelegate.getChildDrawingOrder(childCount, drawingPosition);
-        Log.i("okEffect", this.hashCode() + "@getChildDrawingOrderTop: drawingPosition=" + drawingPosition + " position=" + position);
-        return position;
-    }
-
-    @Override
     public int superGetChildDrawingOrder(int childCount, int drawingPosition) {
         return super.getChildDrawingOrder(childCount, drawingPosition);
     }
@@ -53,6 +45,12 @@ public class EffectLayoutTemplate extends FrameLayout implements EffectLayoutDel
     @Override
     public void superOnMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    protected int getChildDrawingOrder(int childCount, int drawingPosition) {
+        //        Log.i("okEffect", this.hashCode() + "@getChildDrawingOrderTop: drawingPosition=" + drawingPosition + " position=" + position);
+        return mDelegate.getChildDrawingOrder(childCount, drawingPosition);
     }
 
     @Override
