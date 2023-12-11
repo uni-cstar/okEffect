@@ -13,97 +13,46 @@
         android:clipChildren="false"
         android:orientation="vertical">
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/hellowrold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:shadowColor="@android:color/black"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:text="100x100dp"
+                android:textColor="@android:color/white" />
+        </FrameLayout>
+
+
         <LinearLayout
-            android:id="@+id/c1"
+            android:id="@+id/testGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:orientation="horizontal">
 
             <FrameLayout
-                android:id="@+id/view1"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="100dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:padding="20dp">
-
-                <ImageView
-                    android:id="@+id/image1"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/view3"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
-
-                <ImageView
-                    android:id="@+id/image3"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/view4"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
-
-                <ImageView
-                    android:id="@+id/image4"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
-            </FrameLayout>
-
-            <unics.okeffect.sample.FrameLayout2
-                android:id="@+id/view5"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
-
-                <ImageView
-                    android:id="@+id/image5"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
-            </unics.okeffect.sample.FrameLayout2>
-
-            <FrameLayout
-                android:id="@+id/v6_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-
                 android:clipChildren="false">
 
                 <FrameLayout
-                    android:id="@+id/view6"
+                    android:id="@+id/layout1"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:clickable="true"
@@ -111,125 +60,95 @@
                     android:focusableInTouchMode="true">
 
                     <ImageView
-                        android:id="@+id/image6"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/hellowrold" />
                 </FrameLayout>
             </FrameLayout>
+
+
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:clipChildren="false">
+
+                <FrameLayout
+                    android:id="@+id/layout12"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/hellowrold" />
+                </FrameLayout>
+            </FrameLayout>
+
+
         </LinearLayout>
 
-
         <LinearLayout
-            android:id="@+id/c2"
+            android:id="@+id/effectGroup2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:orientation="horizontal">
 
-
-            <FrameLayout
-                android:id="@+id/view11"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="100dp"
-                android:layout_marginTop="20dp"
+            <unics.okeffect.EffectLayoutTemplate
+                android:id="@+id/effectLayout2"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="25dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:padding="20dp">
-
-                <ImageView
-                    android:id="@+id/image11"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/view33"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
-
-                <ImageView
-                    android:id="@+id/image33"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/view44"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
-
-                <ImageView
-                    android:id="@+id/image44"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
-            </FrameLayout>
-
-            <unics.okeffect.sample.FrameLayout2
-                android:id="@+id/view55"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
+                app:ed_cornerSize="12px"
+                app:ed_drawingOrderType="bottom"
+                app:ed_optStrokeCorner="true"
+                app:ed_useDraw="false">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/image55"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:id="@+id/effectImage2"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/hellowrold"
                     app:shapeAppearanceOverlay="@style/RoundedMedium" />
-            </unics.okeffect.sample.FrameLayout2>
 
-            <FrameLayout
-                android:id="@+id/v_62"
+            </unics.okeffect.EffectLayoutTemplate>
+
+            <unics.okeffect.EffectLayoutTemplate
+                android:id="@+id/effectLayout22"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:clipChildren="false">
+                android:layout_marginLeft="50dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                app:ed_cornerSize="12px"
+                app:ed_drawingOrderType="bottom"
+                app:ed_optStrokeCorner="true"
+                app:ed_strokeColor="#c13dcd"
+                app:ed_strokeSize="2dp">
 
-                <FrameLayout
-                    android:id="@+id/view66"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true">
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/effectImage22"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/hellowrold"
+                    app:shapeAppearanceOverlay="@style/RoundedMedium" />
 
-                    <ImageView
-                        android:id="@+id/image66"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/hellowrold" />
-                </FrameLayout>
-            </FrameLayout>
-
+            </unics.okeffect.EffectLayoutTemplate>
         </LinearLayout>
 
         <LinearLayout
@@ -239,26 +158,7 @@
             android:orientation="horizontal">
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                app:ed_inject="true"
-                app:ed_shadowColor="#ed82af"
-                app:ed_shadowSize="12dp"
-                app:ed_useDraw="true">
-
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
-            </FrameLayout>
-
-            <FrameLayout
+                android:id="@+id/layout2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -281,26 +181,7 @@
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                app:ed_inject="true"
-                app:ed_ninePathSrc="@drawable/shadow_112339"
-                app:ed_strokeColor="#ff00ff"
-                app:ed_strokeSize="2dp">
-
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hellowrold" />
-            </FrameLayout>
-
-            <FrameLayout
+                android:id="@+id/layout3"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginLeft="20dp"
@@ -316,9 +197,26 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/hellowrold" />
             </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/layout4"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                app:ed_inject="true"
+                app:ed_ninePathSrc="@drawable/shadow_2">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/hellowrold" />
+            </FrameLayout>
         </LinearLayout>
-
-
 
 
     </LinearLayout>

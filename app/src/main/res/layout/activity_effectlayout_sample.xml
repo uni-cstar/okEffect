@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:orientation="vertical"
-   >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/text"
-        android:layout_marginTop="40dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="sdgsdf"/>
+        android:layout_marginTop="40dp"
+        tools:text="sdgsdf" />
 
     <!--    <unics.okeffect.EffectLayoutTemplateTemplate-->
     <!--        android:id="@+id/effectLayout1"-->
@@ -25,7 +24,7 @@
     <!--        android:clickable="true"-->
     <!--        android:focusable="true"-->
     <!--        android:focusableInTouchMode="true"-->
-    <!--        app:ed_effectOrderType="top"-->
+    <!--        app:ed_drawingOrderType="top"-->
     <!--        app:ed_ninePathSrc="@drawable/shadow_default" />-->
 
 
@@ -33,24 +32,22 @@
         android:id="@+id/effectGroup2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:clipChildren="false"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:orientation="horizontal">
 
         <unics.okeffect.EffectLayoutTemplate
             android:id="@+id/effectLayout2"
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:layout_marginLeft="25dp"
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
             app:ed_cornerSize="12px"
-            app:ed_effectOrderType="bottom"
-            android:layout_marginLeft="25dp"
-            app:ed_strokeColor="#c13dcd"
-            app:ed_strokeSize="2dp"
-            app:ed_useDraw="true"
-            app:ed_optStrokeCorner="true">
+            app:ed_drawingOrderType="bottom"
+            app:ed_optStrokeCorner="true"
+            app:ed_useDraw="false">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/effectImage2"
@@ -71,10 +68,10 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             app:ed_cornerSize="12px"
-            app:ed_effectOrderType="bottom"
+            app:ed_drawingOrderType="bottom"
+            app:ed_optStrokeCorner="true"
             app:ed_strokeColor="#c13dcd"
-            app:ed_strokeSize="2dp"
-            app:ed_optStrokeCorner="true">
+            app:ed_strokeSize="2dp">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/effectImage22"
@@ -88,33 +85,33 @@
     </LinearLayout>
 
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/effectLayout3"-->
-<!--        android:layout_width="124dp"-->
-<!--        android:layout_height="124dp"-->
-<!--        android:clickable="true"-->
-<!--        android:clipChildren="false"-->
-<!--        android:focusable="true"-->
-<!--        app:ed_inject="true"-->
-<!--        android:focusableInTouchMode="true">-->
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/effectLayout3"-->
+    <!--        android:layout_width="124dp"-->
+    <!--        android:layout_height="124dp"-->
+    <!--        android:clickable="true"-->
+    <!--        android:clipChildren="false"-->
+    <!--        android:focusable="true"-->
+    <!--        app:ed_inject="true"-->
+    <!--        android:focusableInTouchMode="true">-->
 
-<!--        <com.google.android.material.imageview.ShapeableImageView-->
-<!--            android:id="@+id/effectImage3"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:padding="1dp"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/hellowrold"-->
-<!--            app:shapeAppearanceOverlay="@style/RoundedMedium"-->
-<!--            app:strokeColor="#ca0100"-->
-<!--            app:strokeWidth="2dp" />-->
+    <!--        <com.google.android.material.imageview.ShapeableImageView-->
+    <!--            android:id="@+id/effectImage3"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:padding="1dp"-->
+    <!--            android:scaleType="centerCrop"-->
+    <!--            android:src="@drawable/hellowrold"-->
+    <!--            app:shapeAppearanceOverlay="@style/RoundedMedium"-->
+    <!--            app:strokeColor="#ca0100"-->
+    <!--            app:strokeWidth="2dp" />-->
 
 
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:background="@drawable/shape_stroke" />-->
-<!--    </FrameLayout>-->
+    <!--        <View-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:background="@drawable/shape_stroke" />-->
+    <!--    </FrameLayout>-->
 
     <!--    <unics.okeffect.EffectLayoutTemplateTemplate-->
     <!--        android:id="@+id/effectLayout3"-->

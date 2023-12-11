@@ -48,23 +48,28 @@
     <!--阴影底部大小-->
     <attr name="ed_shadowSizeBottom" format="dimension|reference" />
 
-    <!--阴影/边框/.9图的效果区域是否显示在布局的界限内，默认false，即效果不会占用布局的位置（但是需要配合parent设置clipChildren=false）-->
-    <attr name="ed_useNegativeInset" format="boolean" />
+    <!--阴影/边框/.9图的效果区域布局类型-->
+    <attr name="ed_boundsType" format="flags" >
+        <!--在控件区域外，不占用控件空间，默认使用该类型（但是由于显示在控件之外，需要配合parent设置clipChildren=false）-->
+        <flag name="out" value="0"/>
+        <!--在控件区域内，作为padding部分-->
+        <flag name="padding" value="1"/>
+    </attr>
 
     <!--是否在使用该属性的view上应用效果：该属性要结合[EffectInjectFactory2]使用才能发挥作用:对EffectLayout无效-->
     <attr name="ed_inject" format="boolean" />
 
-    <!--EffectLayoutTemplate:采用负margin效果时，效果跟其他视图展示的顺序-->
-    <attr name="ed_effectOrderType" format="enum">
-        <!--默认在视图顶部-->
+    <!--EffectLayoutTemplate:绘制顺序-->
+    <attr name="ed_drawingOrderType" format="enum">
+        <!--在视图顶部(默认值)-->
         <enum name="top" value="0" />
-        <!--默认在视图底部-->
+        <!--在视图底部-->
         <enum name="bottom" value="1" />
     </attr>
 
     <declare-styleable name="EffectDrawable">
         <attr name="ed_inject" />
-        <attr name="ed_useNegativeInset" />
+        <attr name="ed_boundsType" />
         <attr name="ed_ninePathSrc" />
         <attr name="ed_useDraw" />
         <attr name="ed_strokeSize" />
@@ -77,6 +82,7 @@
         <attr name="ed_cornerSizeBottomRight" />
         <attr name="ed_cornerSizeBottomLeft" />
 
+        <!--自定义绘制支持：-->
         <attr name="ed_shadowColor" />
         <attr name="ed_shadowSize" />
         <attr name="ed_shadowSizeLeft" />
@@ -84,12 +90,13 @@
         <attr name="ed_shadowSizeRight" />
         <attr name="ed_shadowSizeBottom" />
 
-        <attr name="ed_effectOrderType"/>
+        <!--EffectLayout支持：-->
+        <attr name="ed_drawingOrderType"/>
     </declare-styleable>
 
     <declare-styleable name="EffectLayout">
         <!--        <attr name="ed_inject" />-->
-        <attr name="ed_useNegativeInset" />
+        <attr name="ed_boundsType" />
         <attr name="ed_ninePathSrc" />
         <attr name="ed_useDraw" />
         <attr name="ed_strokeSize" />
@@ -109,6 +116,6 @@
         <attr name="ed_shadowSizeRight" />
         <attr name="ed_shadowSizeBottom" />
 
-        <attr name="ed_effectOrderType" />
+        <attr name="ed_drawingOrderType" />
     </declare-styleable>
 </resources>

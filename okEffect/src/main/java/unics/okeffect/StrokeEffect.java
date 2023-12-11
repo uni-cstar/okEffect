@@ -98,10 +98,10 @@ final class StrokeEffect extends AbstractEffect<StrokeEffect.StrokeState> {
             mState.mPaint.setXfermode(xfermode);
             canvas.drawPath(mState.mStrokeInnerPath, mState.mPaint);
             canvas.restoreToCount(layerId);
+            mState.mPaint.setXfermode(null);
         } else {
             canvas.drawPath(mState.mStrokePath, mState.mPaint);
         }
-        mState.mPaint.setXfermode(null);
     }
 
     private void buildPathIfDirty() {

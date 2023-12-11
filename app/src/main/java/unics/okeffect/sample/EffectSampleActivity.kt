@@ -1,7 +1,7 @@
 package unics.okeffect.sample
 
+import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.NinePatchDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -24,90 +24,22 @@ class EffectSampleActivity : AppCompatActivity() {
             }
 
             if (newFocus != null) {
-//                newFocus.bringToFront()
                 println("width=${newFocus.width} height=${newFocus.height}")
                 newFocus.animate().cancel()
                 newFocus.animate().scaleX(1.2f).scaleY(1.2f).setDuration(300).start()
             }
         }
-        findViewById<View>(R.id.c0).setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        findViewById<View>(R.id.c1).setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        findViewById<View>(R.id.c2).setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        findViewById<View>(R.id.v_62).setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        findViewById<View>(R.id.v6_1).setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-        val view1 = findViewById<View>(R.id.view1)
-        val view3 = findViewById<View>(R.id.view3)
-        val view4 = findViewById<View>(R.id.view4)
-        val view5 = findViewById<View>(R.id.view5)
-        val view6 = findViewById<View>(R.id.view6)
-//        view1.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        view3.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        view4.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        view5.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        view6.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
-        Effects.setAutoOptStrokeCorner(false)
 
-        //.9 view设置了padding
-        view1.background =
-            Effects.withNinePath(this, R.drawable.bg_shadow).buildFocusStateListDrawable()
-        view1.setPadding(20, 20, 20, 20)
-
-        //.9
-        view3.background =
-            Effects.withNinePath(this, R.drawable.bg_shadow).buildFocusStateListDrawable()
-
-        //.9 + stroke
-        view4.background =
-            Effects.withNinePath(resources.getDrawable(R.drawable.bg_shadow) as NinePatchDrawable)
-                .setStroke(20f, Color.RED).buildFocusStateListDrawable()
-
-        //.9 + stroke + contentGap
-        view5.background = Effects.withNinePath(this, R.drawable.bg_shadow)
-            .setStroke(10f, Color.YELLOW).setContentCap(10f).buildFocusStateListDrawable()
-
-        //.9 + stroke(圆角) + contentGap
-        view6.background = Effects.withNinePath(this, R.drawable.bg_shadow)
-            .setStroke(10f, Color.BLUE)
-            .setContentCap(10f)
-            .setCornerRadii(floatArrayOf(20f, 20f, 0f, 0f, 20f, 20f, 0f, 0f))
-            .buildFocusStateListDrawable()
-        val view11 = findViewById<View>(R.id.view11)
-        val view33 = findViewById<View>(R.id.view33)
-        val view44 = findViewById<View>(R.id.view44)
-        val view55 = findViewById<View>(R.id.view55)
-        val view66 = findViewById<View>(R.id.view66)
-//        view11.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        view33.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        view44.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        view55.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//        view66.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-
-        //阴影 + viewPadding
-        view11.background =
-            Effects.withDraw().setShadow(20f, Color.RED).buildFocusStateListDrawable()
-        view11.setPadding(20, 20, 20, 20)
-        //阴影
-        view33.background =
-            Effects.withDraw().setStroke(10f, Color.GREEN).buildFocusStateListDrawable()
-        //边框 + contentGap
-        view44.background =
-            Effects.withDraw().setStroke(10f, Color.CYAN).setCornerRadius(20f).setContentCap(10f)
-                .buildFocusStateListDrawable()
-        //阴影 + 边框
-        view55.background = Effects.withDraw().setShadow(20f, 20f, 20f, 40f, Color.BLACK)
-            .setCornerRadius(10f)
-//            .setContentCap(30f)
-            .setStroke(resources.getDimension(R.dimen.testCornerDimen), Color.RED)
-            .buildFocusStateListDrawable()
-
-        //异性圆角 + 阴影 + 边框 + contentGap
-        view66.background = Effects.withDraw()
-            .setShadow(20f, Color.CYAN)
-            .setCornerRadii(floatArrayOf(20f, 20f, 0f, 0f, 20f, 20f, 0f, 0f))
-            .setStroke(10f, Color.MAGENTA)
-            .setContentCap(10f)
-            .buildFocusStateListDrawable()
-
+//        val layout1 = findViewById<View>(R.id.layout1)
+//        layout1.setOnClickListener {
+//            startActivity(Intent(this, EffectLayoutSampleActivity::class.java))
+//        }
+//        val layout12 = findViewById<View>(R.id.layout12)
+//
+//        //阴影 + viewPadding
+//        Effects.withDraw().setShadow(20f, Color.RED).into(layout1)
+//        //阴影
+//        Effects.withNinePath(this, R.drawable.bg_shadow).into(layout12)
     }
 }

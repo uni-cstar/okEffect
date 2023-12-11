@@ -42,47 +42,20 @@ public interface EffectParams {
     float getShadowBottom();
 
     /**
-     * 边框大小
-     */
-    @Px
-    float getStrokeSize();
-
-    /**
-     * 边框颜色
-     */
-    @ColorInt
-    int getStrokeColor();
-
-    /**
-     * 是否优化边框圆角处的绘制：
-     */
-    boolean optStrokeCorner();
-
-    /**
-     * 是否优化边框圆角处外边框圆角（前提{@link #optStrokeCorner}必须为true）
-     */
-    boolean optStrokeOutCorner();
-
-    /**
-     * 获取外边框圆角半径额外的增量；{@link #optStrokeOutCorner()}开启时才有效
-     */
-    float getIncrementStrokeOutCornerRadius();
-
-    /**
      * 内容与边框之间的间距
      */
     @Px
     float getContentGap();
 
     /**
-     * 圆角半径，在.9中主要作用于边框效果
+     * 圆角半径，在.9中则需要设置为.9图的圆角值，以便后续做其他绘制（比如扫光区域）
      *
      * @see android.graphics.drawable.GradientDrawable#setCornerRadius(float)
      */
     float getCornerRadius();
 
     /**
-     * 四角角度的圆角值，一个角两个坐标；在.9中主要作用于边框效果
+     * 四角角度的圆角值，一个角两个坐标；在.9中则需要设置为.9图的圆角值，以便后续做其他绘制（比如扫光区域）
      * The corners are ordered top-left, top-right, bottom-right, bottom-left.
      *
      * @see android.graphics.drawable.GradientDrawable#setCornerRadii(float[])
@@ -91,43 +64,51 @@ public interface EffectParams {
     float[] getCornerRadii();
 
     /**
-     * 创建Drawable的时候是否使用负Inset的Drawable
+     * 效果视图的布局类型
+     *
+     * @see Effects#BOUNDS_TYPE_OUTER
+     * @see Effects#BOUNDS_TYPE_PADDING
      */
-    boolean useNegativeInsetDrawable();
+    int getBoundsType();
 
     /**
      * 获取效果四周的大小
      *
      * @param rect 用于保存四周大小（四周大小都是正值）
      */
-    default void getEffectRect(Rect rect) {
-        float strokeSize = getStrokeSize();
-        float contentGap = getContentGap();
-        rect.set((int) (getShadowLeft() + strokeSize + contentGap),
-                (int) (getShadowTop() + strokeSize + contentGap),
-                (int) (getShadowRight() + strokeSize + contentGap),
-                (int) (getShadowBottom() + strokeSize + contentGap));
-    }
+    void getEffectRect(Rect rect);
 
     /**
-     * 是否应该使用软件绘制（关闭硬件加速）
+     * 是否包含软件绘制图层：比如绘制的阴影、边框优化的处理等均需要关闭硬件加速；但.9图一般不需要关闭硬件加速
      * <a href="https://developer.android.com/guide/topics/graphics/hardware-accel?hl=zh-cn#layers">硬件加速的官方资料</a>
      */
-    default boolean shouldUseSoftwareLayer() {
-        float[] cornerRadii = getCornerRadii();
-        //需要优化边框圆角
-        boolean isOptStrokeCorner = this.optStrokeCorner() && this.getStrokeSize() > 0 && (getCornerRadius() > 0f || (cornerRadii != null && cornerRadii.length > 0));
-        return ( Build.VERSION.SDK_INT < 28 && isOptStrokeCorner) //边框的圆角优化采用了Xfermode，在28以前需要关闭硬件加速
-                || (this instanceof DrawEffectParams && ((DrawEffectParams) this).hasShadow());//阴影使用了
-    }
+    boolean containSoftwareLayer();
 
     @NonNull
     default Drawable create() {
         return EffectDrawableFactory.createEffectDrawable(this);
     }
 
+    /**
+     * 自定义绘制参数
+     */
     interface DrawEffectParams extends EffectParams {
 
+        /**
+         * 边框大小
+         */
+        @Px
+        float getStrokeSize();
+
+        /**
+         * 边框颜色
+         */
+        @ColorInt
+        int getStrokeColor();
+
+        /**
+         * 阴影颜色
+         */
         int getShadowColor();
 
         /**
@@ -137,15 +118,21 @@ public interface EffectParams {
             return getShadowLeft() > 0 || getShadowTop() > 0 || getShadowRight() > 0 || getShadowBottom() > 0;
         }
 
-        @Override
+        /**
+         * 是否优化边框圆角处的绘制：
+         */
+        boolean optStrokeCorner();
+
+        /**
+         * 是否优化边框圆角处外边框圆角（前提{@link #optStrokeCorner}必须为true）
+         */
         default boolean optStrokeOutCorner() {
             return Effects.DEFAULT_ENABLE_OPT_OUT_CORNER;
         }
 
         /**
-         * .9图默认不开启边框外圆角半径优化
+         * 获取外边框圆角半径额外的增量；{@link #optStrokeOutCorner()}开启时才有效
          */
-        @Override
         default float getIncrementStrokeOutCornerRadius() {
             if (optStrokeOutCorner()) {
                 return getStrokeSize() / 2f;
@@ -153,53 +140,78 @@ public interface EffectParams {
                 return 0f;
             }
         }
+
+        /**
+         * 获取效果四周的大小
+         *
+         * @param rect 用于保存四周大小（四周大小都是正值）
+         */
+        default void getEffectRect(Rect rect) {
+            float strokeSize = getStrokeSize();
+            float contentGap = getContentGap();
+            rect.set((int) (getShadowLeft() + strokeSize + contentGap),
+                    (int) (getShadowTop() + strokeSize + contentGap),
+                    (int) (getShadowRight() + strokeSize + contentGap),
+                    (int) (getShadowBottom() + strokeSize + contentGap));
+        }
+
+        @Override
+        default boolean containSoftwareLayer() {
+            float[] cornerRadii = getCornerRadii();
+            //需要优化边框圆角
+            boolean isOptStrokeCorner = this.optStrokeCorner() && this.getStrokeSize() > 0 && (getCornerRadius() > 0f || (cornerRadii != null && cornerRadii.length > 0));
+            return (Build.VERSION.SDK_INT < 28 && isOptStrokeCorner) //边框的圆角优化采用了Xfermode，在28以前需要关闭硬件加速
+                    || this.hasShadow();//使用了阴影
+        }
     }
 
-    interface NinePathEffectParams extends EffectParams {
+    /**
+     * .9图参数
+     */
+    interface NinePatchEffectParams extends EffectParams {
 
         NinePatchDrawable getDrawable();
 
         /**
-         * .9图默认不开启外圆角半径优化;（没必要开启，如果开启之后，外圆角半径比实际的大，会可能与.9图的半径不一致）
+         * 获取效果四周的大小
+         *
+         * @param rect 用于保存四周大小（四周大小都是正值）
          */
-        @Override
-        default boolean optStrokeOutCorner() {
-            return false;
+        default void getEffectRect(Rect rect) {
+            float contentGap = getContentGap();
+            rect.set((int) (getShadowLeft() + contentGap),
+                    (int) (getShadowTop() + contentGap),
+                    (int) (getShadowRight() + contentGap),
+                    (int) (getShadowBottom() + contentGap));
         }
 
         /**
-         * .9图默认不开启边框外圆角半径优化
+         * .9图默认不需要使用软件绘制
          */
         @Override
-        default float getIncrementStrokeOutCornerRadius() {
-            return 0;
+        default boolean containSoftwareLayer() {
+            return false;
         }
 
     }
 
+    /**
+     * 通用参数
+     */
     abstract class CommonParams implements EffectParams {
 
         float mShadowLeft;
         float mShadowRight;
         float mShadowTop;
         float mShadowBottom;
-        float mStrokeSize;
-        boolean mOptStrokeCorner;
-        int mStrokeColor;
         float mContentGap;
         float mCornerRadius;
         float[] mCornerRadii;
-        boolean mUseNegativeInsetDrawable;
+        int mEffectBoundsType;
 
-        public CommonParams(Effects.Builder<?, ?> builder) {
-            mStrokeSize = builder.mStrokeSize;
-            mStrokeColor = builder.mStrokeColor;
-            //如果设置了优化边框或者设置了自动优化并且边框大小超过了指定的厚度则进行边框优化
-            mOptStrokeCorner = builder.mOptStrokeCorner;
+        public CommonParams(EffectBuilder<?, ?> builder) {
             mContentGap = builder.mContentGap;
-            mCornerRadius = builder.mCornerRadius;
-            mCornerRadii = builder.mCornerRadii;
-            mUseNegativeInsetDrawable = builder.mUseNegativeInsetDrawable;
+            mEffectBoundsType = builder.mEffectBoundsType;
         }
 
         @Override
@@ -223,21 +235,6 @@ public interface EffectParams {
         }
 
         @Override
-        public float getStrokeSize() {
-            return mStrokeSize;
-        }
-
-        @Override
-        public int getStrokeColor() {
-            return mStrokeColor;
-        }
-
-        @Override
-        public boolean optStrokeCorner() {
-            return mOptStrokeCorner;
-        }
-
-        @Override
         public float getContentGap() {
             return mContentGap;
         }
@@ -254,34 +251,36 @@ public interface EffectParams {
         }
 
         @Override
-        public boolean useNegativeInsetDrawable() {
-            return mUseNegativeInsetDrawable;
+        public int getBoundsType() {
+            return mEffectBoundsType;
         }
+
     }
 
     /**
      * .9图效果参数
      */
-    final class NinePathDrawableEffectParamsImpl extends CommonParams implements NinePathEffectParams {
+    final class NinePatchEffectParamsImpl extends CommonParams implements NinePatchEffectParams {
 
-        private static final Rect NINE_PATH_PADDING_RECT = new Rect();
+        private static final Rect sNinePatchPaddingRect = new Rect();
 
         NinePatchDrawable mDrawable;
 
-        NinePathDrawableEffectParamsImpl(Effects.NinePathBuilder builder) {
+        NinePatchEffectParamsImpl(EffectBuilder.NinePathBuilder builder) {
             super(builder);
             mDrawable = builder.mDrawable;
-            mDrawable.getPadding(NINE_PATH_PADDING_RECT);
-            mShadowLeft = NINE_PATH_PADDING_RECT.left;
-            mShadowTop = NINE_PATH_PADDING_RECT.top;
-            mShadowRight = NINE_PATH_PADDING_RECT.right;
-            mShadowBottom = NINE_PATH_PADDING_RECT.bottom;
+            mDrawable.getPadding(sNinePatchPaddingRect);
+            mShadowLeft = sNinePatchPaddingRect.left;
+            mShadowTop = sNinePatchPaddingRect.top;
+            mShadowRight = sNinePatchPaddingRect.right;
+            mShadowBottom = sNinePatchPaddingRect.bottom;
         }
 
         @Override
         public NinePatchDrawable getDrawable() {
             return mDrawable;
         }
+
     }
 
     /**
@@ -291,18 +290,43 @@ public interface EffectParams {
 
         int mShadowColor;
 
-        DrawEffectParamsImpl(Effects.DrawBuilder builder) {
+        float mStrokeSize;
+        boolean mOptStrokeCorner;
+        int mStrokeColor;
+
+        DrawEffectParamsImpl(EffectBuilder.DrawBuilder builder) {
             super(builder);
             mShadowLeft = builder.mShadowLeft;
             mShadowTop = builder.mShadowTop;
             mShadowRight = builder.mShadowRight;
             mShadowBottom = builder.mShadowBottom;
             mShadowColor = builder.mShadowColor;
+            mStrokeSize = builder.mStrokeSize;
+            mStrokeColor = builder.mStrokeColor;
+            //如果设置了优化边框或者设置了自动优化并且边框大小超过了指定的厚度则进行边框优化
+            mOptStrokeCorner = builder.mOptStrokeCorner;
+            mCornerRadius = builder.mCornerRadius;
+            mCornerRadii = builder.mCornerRadii;
         }
 
         @Override
         public int getShadowColor() {
             return mShadowColor;
+        }
+
+        @Override
+        public float getStrokeSize() {
+            return mStrokeSize;
+        }
+
+        @Override
+        public int getStrokeColor() {
+            return mStrokeColor;
+        }
+
+        @Override
+        public boolean optStrokeCorner() {
+            return mOptStrokeCorner;
         }
 
     }

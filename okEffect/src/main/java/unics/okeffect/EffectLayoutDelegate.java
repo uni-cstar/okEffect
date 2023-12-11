@@ -31,16 +31,18 @@ class EffectLayoutDelegate {
         void superOnMeasure(int widthMeasureSpec, int heightMeasureSpec);
     }
 
-    static final int EFFECT_VIEW_ORDER_TOP = 0;
-    static final int EFFECT_VIEW_ORDER_BOTTOM = 1;
-    static final Rect sEffectInsetRect = new Rect();
+    static final int DRAWING_ORDER_TYPE_TOP = 0;
+    static final int DRAWING_ORDER_TYPE_BOTTOM = 1;
+
     private final ViewGroup mViewGroup;
     private EffectView mEffectView;
     private int mEffectViewIndex = -1;
-    private Effects.Builder<?, ?> mEffectBuilder;
+    private EffectBuilder<?, ?> mEffectBuilder;
     private EffectParams mEffectParams;
     private final DI mDI;
-    private int mEffectViewOrder = EFFECT_VIEW_ORDER_TOP;
+    private int mDrawingOrderType = DRAWING_ORDER_TYPE_TOP;
+
+    private static final Rect sTempRect = new Rect();
 
     EffectLayoutDelegate(DI di, @NonNull ViewGroup viewGroup) {
         this.mDI = di;
@@ -50,9 +52,9 @@ class EffectLayoutDelegate {
     void setup(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EffectDrawable, defStyleAttr, 0);
         mEffectBuilder = Effects.withAttrs(ta);
-        mEffectViewOrder = ta.getInt(R.styleable.EffectDrawable_ed_effectOrderType, mEffectViewOrder);
-        //禁用负inset，返回常规drawable
-        mEffectBuilder.mUseNegativeInsetDrawable = false;
+        mDrawingOrderType = ta.getInt(R.styleable.EffectDrawable_ed_drawingOrderType, mDrawingOrderType);
+        //强制修改效果
+        mEffectBuilder.mEffectBoundsType = Effects.BOUNDS_TYPE_PADDING;
         mEffectParams = mEffectBuilder.buildParams();
         setupEffectView(context);
     }
@@ -70,10 +72,10 @@ class EffectLayoutDelegate {
         mEffectView = new EffectView(context);
         //关键点2：跟随父group的状态变化（获焦点时显示，没获取焦点时隐藏）
         mEffectView.setDuplicateParentStateEnabled(true);
-        mEffectView.setBackground(Effects.createFocusStateListDrawable(mEffectParams.create()));
+        mEffectView.setBackground(Effects.createStateListDrawable(mEffectParams.create()));
         mEffectView.setLayoutParams(generateEffectViewLayoutParams());
         //关键点3：阴影的绘制需要关闭硬件加速：奇怪的是在一款小米手机上（Android10）没有关闭硬件加速但是效果也绘制出来了
-        if (mEffectParams.shouldUseSoftwareLayer()) {
+        if (mEffectParams.containSoftwareLayer()) {
             mEffectView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             Log.d("okEffect", "setupEffectView: shouldUseSoftwareLayer=true");
         } else {
@@ -84,9 +86,9 @@ class EffectLayoutDelegate {
     }
 
     /**
-     * 用于版本兼容：在Android 7之前，如果childView设置的LayoutParams与{@link #mViewGroup}类型不同，会导致添加到ViewGroup中时margin被忽略
+     * 用于版本兼容：在{@link android.os.Build.VERSION_CODES#N}之前，如果childView设置的LayoutParams与{@link #mViewGroup}类型不同，会导致添加到ViewGroup中时margin被忽略
      *
-     * @see View.sPreserveMarginParamsInLayoutParamConversion （包访问）Android 7即以后的源码中有该变量的定义
+     * @see View.sPreserveMarginParamsInLayoutParamConversion （包访问）{@link android.os.Build.VERSION_CODES#N}即以后的源码中有该变量的定义
      */
     private ViewGroup.LayoutParams generateEffectViewLayoutParams() {
         ViewGroup.MarginLayoutParams layoutParams;
@@ -99,8 +101,10 @@ class EffectLayoutDelegate {
         } else {
             layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
-        mEffectParams.getEffectRect(sEffectInsetRect);
-        layoutParams.setMargins(-sEffectInsetRect.left, -sEffectInsetRect.top, -sEffectInsetRect.right, -sEffectInsetRect.bottom);
+        //要用负margin，这样方便定位
+        sTempRect.setEmpty();
+        mEffectParams.getEffectRect(sTempRect);
+        layoutParams.setMargins(-sTempRect.left, -sTempRect.top, -sTempRect.right, -sTempRect.bottom);
         return layoutParams;
     }
 
@@ -112,9 +116,9 @@ class EffectLayoutDelegate {
      */
     @CallBy
     int getChildDrawingOrder(int childCount, int drawingPosition) {
-        if (mEffectViewOrder == EFFECT_VIEW_ORDER_BOTTOM) {
+        if (mDrawingOrderType == DRAWING_ORDER_TYPE_BOTTOM) {
             return getChildDrawingOrderBottom(childCount, drawingPosition, mEffectViewIndex);
-        } else if (mEffectViewOrder == EFFECT_VIEW_ORDER_TOP) {
+        } else if (mDrawingOrderType == DRAWING_ORDER_TYPE_TOP) {
             return getChildDrawingOrderTop(childCount, drawingPosition, mEffectViewIndex);
         } else {
             return mDI.superGetChildDrawingOrder(childCount, drawingPosition);

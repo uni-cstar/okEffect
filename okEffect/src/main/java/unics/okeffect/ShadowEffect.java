@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;

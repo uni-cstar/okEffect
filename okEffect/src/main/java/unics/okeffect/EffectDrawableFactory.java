@@ -5,7 +5,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.util.Log;
 
 /**
  * Create by luochao
@@ -16,11 +15,12 @@ interface EffectDrawableFactory<T extends EffectParams> {
 
     Drawable create(T params);
 
-    Rect sEffectInsetRect = new Rect();
-
+    /**
+     * 根据配置参数创建Drawable
+     */
     static Drawable createEffectDrawable(EffectParams params) {
-        if (params instanceof EffectParams.NinePathEffectParams) {
-            return NinePath.getInstance().create((EffectParams.NinePathEffectParams) params);
+        if (params instanceof EffectParams.NinePatchEffectParams) {
+            return NinePath.getInstance().create((EffectParams.NinePatchEffectParams) params);
         } else if (params instanceof EffectParams.DrawEffectParams) {
             return Draw.getInstance().create((EffectParams.DrawEffectParams) params);
         }
@@ -47,7 +47,7 @@ interface EffectDrawableFactory<T extends EffectParams> {
     /**
      * 创建边框效果
      */
-    static StrokeEffect createStrokeEffect(EffectParams params) {
+    static StrokeEffect createStrokeEffect(EffectParams.DrawEffectParams params) {
         StrokeEffect drawable = new StrokeEffect(params.getStrokeSize());
         drawable.setOptOutCorner(params.optStrokeOutCorner());
         drawable.setOptCorner(params.optStrokeCorner());
@@ -68,43 +68,33 @@ interface EffectDrawableFactory<T extends EffectParams> {
      * @param params  对应的参数
      */
     static Drawable createEffectDrawable(Drawable content, EffectParams params) {
-        params.getEffectRect(sEffectInsetRect);
-        return new EffectDrawable(content,
-                -sEffectInsetRect.left,
-                -sEffectInsetRect.top,
-                -sEffectInsetRect.right,
-                -sEffectInsetRect.bottom);
+        if (params.getBoundsType() == Effects.BOUNDS_TYPE_OUTER) {
+            Rect rect = Effects.sTmpEffectRect;
+            rect.setEmpty();
+            params.getEffectRect(rect);
+            return new EffectDrawable(content, rect.left, rect.top, rect.right, rect.bottom,params.getBoundsType(), params.containSoftwareLayer());
+        } else {
+            //在bounds内，则直接返回原始的drawable即可
+            return content;
+        }
     }
 
     /**
      * .9图构建工厂
      */
-    final class NinePath implements EffectDrawableFactory<EffectParams.NinePathEffectParams> {
+    final class NinePath implements EffectDrawableFactory<EffectParams.NinePatchEffectParams> {
 
         private static class SingleTone {
-            static EffectDrawableFactory<EffectParams.NinePathEffectParams> mInstance = new NinePath();
+            static EffectDrawableFactory<EffectParams.NinePatchEffectParams> mInstance = new NinePath();
         }
 
-        public static EffectDrawableFactory<EffectParams.NinePathEffectParams> getInstance() {
+        public static EffectDrawableFactory<EffectParams.NinePatchEffectParams> getInstance() {
             return SingleTone.mInstance;
         }
 
         @Override
-        public Drawable create(EffectParams.NinePathEffectParams params) {
-            Drawable content;
-            int strokeSize = (int) params.getStrokeSize();
-            Log.i("Stroke", "create: strokeSize=" + strokeSize);
-            if (strokeSize > 0) {
-                //.9图的边框不用优化外边框圆角，这样子内边框和外边框的圆角是一样大的，就刚好能够跟.9切合
-                content = new LayerDrawable(new Drawable[]{params.getDrawable(), createStrokeEffect(params)});
-            } else {
-                content = params.getDrawable();
-            }
-            if (params.useNegativeInsetDrawable()) {
-                return createEffectDrawable(content, params);
-            } else {
-                return content;
-            }
+        public Drawable create(EffectParams.NinePatchEffectParams params) {
+            return createEffectDrawable(params.getDrawable(), params);
         }
     }
 
@@ -141,11 +131,7 @@ interface EffectDrawableFactory<T extends EffectParams> {
                 //什么都没有
                 content = new ColorDrawable(Color.TRANSPARENT);
             }
-            if (params.useNegativeInsetDrawable()) {
-                return createEffectDrawable(content, params);
-            } else {
-                return content;
-            }
+            return createEffectDrawable(content, params);
         }
     }
 
