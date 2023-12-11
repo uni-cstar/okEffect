@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
  * on 2023/11/23
  * 代码模板
  */
-public class EffectLayoutTemplate extends FrameLayout implements EffectLayoutDelegate.DI {
+ class EffectLayoutTemplate extends FrameLayout implements EffectLayoutDelegate.DI {
 
     private final EffectLayoutDelegate mDelegate;
 

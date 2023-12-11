@@ -83,7 +83,7 @@ public class EffectInjectFactory2 implements LayoutInflater.Factory2 {
             }
         }
 
-        if (view != null && !(view instanceof EffectLayoutTemplate)) {
+        if (view != null && !(view instanceof EffectLayoutDelegate.DI)) {
             //EffectLayout内部会自己处理effect
             tryInjectEffect(view, context, attrs);
         }
