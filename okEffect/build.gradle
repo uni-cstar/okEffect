@@ -1,17 +1,7 @@
 plugins {
     id 'com.android.library'
-//    id 'com.vanniktech.maven.publish'
+    id 'com.vanniktech.maven.publish'
 }
-
-//仓库地址配置
-allprojects {
-//    plugins.withId("com.vanniktech.maven.publish") {
-//        mavenPublish {
-//            sonatypeHost = "S01"
-//        }
-//    }
-}
-
 
 android {
     namespace 'unics.okeffect'
@@ -67,6 +57,11 @@ tasks.withType(Javadoc) {
     options.addStringOption('charSet', 'UTF-8')
 }
 
-//mavenPublishing {
-//    configure(AndroidSingleVariantLibrary(true))
-//}
+import com.vanniktech.maven.publish.SonatypeHost
+mavenPublishing {
+//    publishToMavenCentral(SonatypeHost.DEFAULT)
+//    // or when publishing to https://s01.oss.sonatype.org
+    publishToMavenCentral(SonatypeHost.S01,false)
+
+    signAllPublications()
+}
