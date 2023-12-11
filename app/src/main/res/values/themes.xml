@@ -13,7 +13,8 @@
 
     <style name="RoundedMedium">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">12px</item>
+        <item name="cornerSizeBottomLeft">20px</item>
+        <item name="cornerSizeTopRight">20px</item>
     </style>
 
     <style name="RoundedMedium2">

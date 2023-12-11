@@ -103,7 +103,7 @@
             android:clipToPadding="false"
             android:orientation="horizontal">
 
-            <unics.okeffect.EffectLayoutTemplate
+            <unics.okeffect.EffectFrameLayout
                 android:id="@+id/effectLayout2"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
@@ -124,9 +124,9 @@
                     android:src="@drawable/hellowrold"
                     app:shapeAppearanceOverlay="@style/RoundedMedium" />
 
-            </unics.okeffect.EffectLayoutTemplate>
+            </unics.okeffect.EffectFrameLayout>
 
-            <unics.okeffect.EffectLayoutTemplate
+            <unics.okeffect.EffectFrameLayout
                 android:id="@+id/effectLayout22"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
                     android:src="@drawable/hellowrold"
                     app:shapeAppearanceOverlay="@style/RoundedMedium" />
 
-            </unics.okeffect.EffectLayoutTemplate>
+            </unics.okeffect.EffectFrameLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -189,7 +189,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                app:ed_inject="true">
+                app:ed_inject="true"
+                app:ed_contentGap="10dp">
 
                 <ImageView
                     android:layout_width="100dp"

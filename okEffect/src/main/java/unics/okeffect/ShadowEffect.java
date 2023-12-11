@@ -136,7 +136,6 @@ final class ShadowEffect extends AbstractEffect<ShadowEffect.ShadowState> {
         }
 
         void updateMaskFilter() {
-
             float radius = mShadowLeft;
             if (mShadowTop > radius) {
                 radius = mShadowTop;

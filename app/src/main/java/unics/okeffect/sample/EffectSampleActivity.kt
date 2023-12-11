@@ -30,16 +30,15 @@ class EffectSampleActivity : AppCompatActivity() {
             }
         }
 
+        val layout1 = findViewById<View>(R.id.layout1)
+        layout1.setOnClickListener {
+            startActivity(Intent(this, EffectLayoutSampleActivity::class.java))
+        }
+        val layout12 = findViewById<View>(R.id.layout12)
 
-//        val layout1 = findViewById<View>(R.id.layout1)
-//        layout1.setOnClickListener {
-//            startActivity(Intent(this, EffectLayoutSampleActivity::class.java))
-//        }
-//        val layout12 = findViewById<View>(R.id.layout12)
-//
-//        //阴影 + viewPadding
-//        Effects.withDraw().setShadow(20f, Color.RED).into(layout1)
-//        //阴影
-//        Effects.withNinePath(this, R.drawable.bg_shadow).into(layout12)
+        //阴影 + viewPadding
+        Effects.withDraw().setShadow(20f, Color.RED) .into(layout1)
+        //阴影
+        Effects.withNinePath(this, R.drawable.bg_shadow).into(layout12)
     }
 }

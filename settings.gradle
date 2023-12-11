@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 rootProject.name = "okEffect"
 include ':app'
 include ':okEffect'
+include ':okEffectCompiler'
+include ':okEffectAnnotation'

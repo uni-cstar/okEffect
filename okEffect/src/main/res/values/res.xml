@@ -4,6 +4,9 @@
     <!--主题样式-->
     <attr name="effectDrawableStyle" format="reference" />
 
+    <!--是否注入效果：该属性要结合[EffectInjectFactory2]使用才能发挥作用:对EffectLayout无效-->
+    <attr name="ed_inject" format="boolean" />
+
     <!--使用.9图-->
     <attr name="ed_ninePathSrc" format="reference" />
 
@@ -49,22 +52,19 @@
     <attr name="ed_shadowSizeBottom" format="dimension|reference" />
 
     <!--阴影/边框/.9图的效果区域布局类型-->
-    <attr name="ed_boundsType" format="flags" >
+    <attr name="ed_boundsType" format="flags">
         <!--在控件区域外，不占用控件空间，默认使用该类型（但是由于显示在控件之外，需要配合parent设置clipChildren=false）-->
-        <flag name="out" value="0"/>
+        <flag name="out" value="0" />
         <!--在控件区域内，作为padding部分-->
-        <flag name="padding" value="1"/>
+        <flag name="padding" value="1" />
     </attr>
 
-    <!--是否在使用该属性的view上应用效果：该属性要结合[EffectInjectFactory2]使用才能发挥作用:对EffectLayout无效-->
-    <attr name="ed_inject" format="boolean" />
-
     <!--EffectLayoutTemplate:绘制顺序-->
-    <attr name="ed_drawingOrderType" format="enum">
+    <attr name="ed_drawingOrderType" format="flags">
         <!--在视图顶部(默认值)-->
-        <enum name="top" value="0" />
+        <flag name="top" value="0" />
         <!--在视图底部-->
-        <enum name="bottom" value="1" />
+        <flag name="bottom" value="1" />
     </attr>
 
     <declare-styleable name="EffectDrawable">
@@ -73,8 +73,8 @@
         <attr name="ed_ninePathSrc" />
         <attr name="ed_useDraw" />
         <attr name="ed_strokeSize" />
-        <attr name="ed_optStrokeCorner" />
         <attr name="ed_strokeColor" />
+        <attr name="ed_optStrokeCorner" />
         <attr name="ed_contentGap" />
         <attr name="ed_cornerSize" />
         <attr name="ed_cornerSizeTopLeft" />
@@ -91,17 +91,64 @@
         <attr name="ed_shadowSizeBottom" />
 
         <!--EffectLayout支持：-->
-        <attr name="ed_drawingOrderType"/>
+        <attr name="ed_drawingOrderType" />
     </declare-styleable>
 
     <declare-styleable name="EffectLayout">
-        <!--        <attr name="ed_inject" />-->
         <attr name="ed_boundsType" />
         <attr name="ed_ninePathSrc" />
         <attr name="ed_useDraw" />
         <attr name="ed_strokeSize" />
-        <attr name="ed_optStrokeCorner" />
         <attr name="ed_strokeColor" />
+        <attr name="ed_optStrokeCorner" />
+        <attr name="ed_contentGap" />
+        <attr name="ed_cornerSize" />
+        <attr name="ed_cornerSizeTopLeft" />
+        <attr name="ed_cornerSizeTopRight" />
+        <attr name="ed_cornerSizeBottomRight" />
+        <attr name="ed_cornerSizeBottomLeft" />
+
+        <attr name="ed_shadowColor" />
+        <attr name="ed_shadowSize" />
+        <attr name="ed_shadowSizeLeft" />
+        <attr name="ed_shadowSizeTop" />
+        <attr name="ed_shadowSizeRight" />
+        <attr name="ed_shadowSizeBottom" />
+
+        <attr name="ed_drawingOrderType" />
+    </declare-styleable>
+
+    <declare-styleable name="EffectFrameLayout">
+        <attr name="ed_boundsType" />
+        <attr name="ed_ninePathSrc" />
+        <attr name="ed_useDraw" />
+        <attr name="ed_strokeSize" />
+        <attr name="ed_strokeColor" />
+        <attr name="ed_optStrokeCorner" />
+        <attr name="ed_contentGap" />
+        <attr name="ed_cornerSize" />
+        <attr name="ed_cornerSizeTopLeft" />
+        <attr name="ed_cornerSizeTopRight" />
+        <attr name="ed_cornerSizeBottomRight" />
+        <attr name="ed_cornerSizeBottomLeft" />
+
+        <attr name="ed_shadowColor" />
+        <attr name="ed_shadowSize" />
+        <attr name="ed_shadowSizeLeft" />
+        <attr name="ed_shadowSizeTop" />
+        <attr name="ed_shadowSizeRight" />
+        <attr name="ed_shadowSizeBottom" />
+
+        <attr name="ed_drawingOrderType" />
+    </declare-styleable>
+
+    <declare-styleable name="EffectRelativeLayout">
+        <attr name="ed_boundsType" />
+        <attr name="ed_ninePathSrc" />
+        <attr name="ed_useDraw" />
+        <attr name="ed_strokeSize" />
+        <attr name="ed_strokeColor" />
+        <attr name="ed_optStrokeCorner" />
         <attr name="ed_contentGap" />
         <attr name="ed_cornerSize" />
         <attr name="ed_cornerSizeTopLeft" />

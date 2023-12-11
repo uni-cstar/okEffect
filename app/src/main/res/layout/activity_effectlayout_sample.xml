@@ -16,17 +16,6 @@
         android:layout_marginTop="40dp"
         tools:text="sdgsdf" />
 
-    <!--    <unics.okeffect.EffectLayoutTemplateTemplate-->
-    <!--        android:id="@+id/effectLayout1"-->
-    <!--        android:layout_width="30dp"-->
-    <!--        android:layout_height="30dp"-->
-    <!--        android:background="#321100cf"-->
-    <!--        android:clickable="true"-->
-    <!--        android:focusable="true"-->
-    <!--        android:focusableInTouchMode="true"-->
-    <!--        app:ed_drawingOrderType="top"-->
-    <!--        app:ed_ninePathSrc="@drawable/shadow_default" />-->
-
 
     <LinearLayout
         android:id="@+id/effectGroup2"
@@ -36,7 +25,7 @@
         android:clipToPadding="false"
         android:orientation="horizontal">
 
-        <unics.okeffect.EffectLayoutTemplate
+        <unics.okeffect.EffectFrameLayout
             android:id="@+id/effectLayout2"
             android:layout_width="120dp"
             android:layout_height="120dp"
@@ -57,9 +46,9 @@
                 android:src="@drawable/hellowrold"
                 app:shapeAppearanceOverlay="@style/RoundedMedium" />
 
-        </unics.okeffect.EffectLayoutTemplate>
+        </unics.okeffect.EffectFrameLayout>
 
-        <unics.okeffect.EffectLayoutTemplate
+        <unics.okeffect.EffectFrameLayout
             android:id="@+id/effectLayout22"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,54 +70,7 @@
                 android:src="@drawable/hellowrold"
                 app:shapeAppearanceOverlay="@style/RoundedMedium" />
 
-        </unics.okeffect.EffectLayoutTemplate>
+        </unics.okeffect.EffectFrameLayout>
     </LinearLayout>
-
-
-    <!--    <FrameLayout-->
-    <!--        android:id="@+id/effectLayout3"-->
-    <!--        android:layout_width="124dp"-->
-    <!--        android:layout_height="124dp"-->
-    <!--        android:clickable="true"-->
-    <!--        android:clipChildren="false"-->
-    <!--        android:focusable="true"-->
-    <!--        app:ed_inject="true"-->
-    <!--        android:focusableInTouchMode="true">-->
-
-    <!--        <com.google.android.material.imageview.ShapeableImageView-->
-    <!--            android:id="@+id/effectImage3"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:padding="1dp"-->
-    <!--            android:scaleType="centerCrop"-->
-    <!--            android:src="@drawable/hellowrold"-->
-    <!--            app:shapeAppearanceOverlay="@style/RoundedMedium"-->
-    <!--            app:strokeColor="#ca0100"-->
-    <!--            app:strokeWidth="2dp" />-->
-
-
-    <!--        <View-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:background="@drawable/shape_stroke" />-->
-    <!--    </FrameLayout>-->
-
-    <!--    <unics.okeffect.EffectLayoutTemplateTemplate-->
-    <!--        android:id="@+id/effectLayout3"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:clickable="true"-->
-    <!--        android:focusable="true"-->
-    <!--        android:focusableInTouchMode="true"-->
-    <!--        app:ed_ninePathSrc="@drawable/shadow_2">-->
-
-    <!--        <com.google.android.material.imageview.ShapeableImageView-->
-    <!--            android:layout_width="60dp"-->
-    <!--            android:layout_height="60dp"-->
-    <!--            android:scaleType="centerCrop"-->
-    <!--            android:src="@drawable/hellowrold"-->
-    <!--            app:shapeAppearanceOverlay="@style/RoundedMedium2" />-->
-
-    <!--    </unics.okeffect.EffectLayoutTemplateTemplate>-->
 
 </LinearLayout>
