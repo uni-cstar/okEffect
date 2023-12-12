@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 /**
  * Create by luochao
  * on 2023/11/15
+ * 边框效果
  */
 final class StrokeEffect extends AbstractEffect<StrokeEffect.StrokeState> {
 

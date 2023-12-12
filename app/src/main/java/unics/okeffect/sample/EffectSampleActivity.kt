@@ -39,6 +39,6 @@ class EffectSampleActivity : AppCompatActivity() {
         //阴影 + viewPadding
         Effects.withDraw().setShadow(20f, Color.RED) .into(layout1)
         //阴影
-        Effects.withNinePath(this, R.drawable.bg_shadow).into(layout12)
+        Effects.withNinePatch(this, R.drawable.bg_shadow).into(layout12)
     }
 }

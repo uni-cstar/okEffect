@@ -13,9 +13,9 @@ import androidx.annotation.Nullable;
 /**
  * Create by luochao
  * on 2023/11/23
- * 代码模板
+ * okEffectCompiler生成自定义布局参照的代码模板
  */
- class EffectLayoutTemplate extends FrameLayout implements EffectLayoutDelegate.DI {
+class EffectLayoutTemplate extends FrameLayout implements EffectLayoutDelegate.DI {
 
     private final EffectLayoutDelegate mDelegate;
 

@@ -18,6 +18,12 @@ import androidx.annotation.Px;
 public interface EffectParams {
 
     /**
+     * 绘制效果与内容之间的间距
+     */
+    @Px
+    float getContentGap();
+
+    /**
      * 左侧阴影大小
      */
     @Px
@@ -42,23 +48,8 @@ public interface EffectParams {
     float getShadowBottom();
 
     /**
-     * 内容与边框之间的间距
-     */
-    @Px
-    float getContentGap();
-
-    /**
-     * 圆角半径，在.9中则需要设置为.9图的圆角值，以便后续做其他绘制（比如扫光区域）
-     *
-     * @see android.graphics.drawable.GradientDrawable#setCornerRadius(float)
-     */
-    float getCornerRadius();
-
-    /**
-     * 四角角度的圆角值，一个角两个坐标；在.9中则需要设置为.9图的圆角值，以便后续做其他绘制（比如扫光区域）
+     * 四角角度的圆角值，一个角两个坐标；在.9中则需要设置为.9图的圆角值（只是预留），以便后续做其他绘制（比如扫光区域）
      * The corners are ordered top-left, top-right, bottom-right, bottom-left.
-     *
-     * @see android.graphics.drawable.GradientDrawable#setCornerRadii(float[])
      */
     @Nullable
     float[] getCornerRadii();
@@ -72,17 +63,32 @@ public interface EffectParams {
     int getBoundsType();
 
     /**
-     * 获取效果四周的大小
+     * 获取四周绘制区域大小
      *
-     * @param rect 用于保存四周大小（四周大小都是正值）
+     * @param rect 用于保存大小（大小都是正值）
      */
     void getEffectRect(Rect rect);
 
     /**
-     * 是否包含软件绘制图层：比如绘制的阴影、边框优化的处理等均需要关闭硬件加速；但.9图一般不需要关闭硬件加速
+     * 是否包含软件绘制支持的图层：比如Canvas绘制阴影、边框优化的处理等均需要关闭硬件加速；但.9图一般不需要关闭硬件加速
      * <a href="https://developer.android.com/guide/topics/graphics/hardware-accel?hl=zh-cn#layers">硬件加速的官方资料</a>
      */
     boolean containSoftwareLayer();
+
+    /**
+     * 是否有圆角
+     */
+    default boolean hasCorner() {
+        float[] cornerRadii = getCornerRadii();
+        if (cornerRadii == null || cornerRadii.length == 0)
+            return false;
+        for (float cornerRadius : cornerRadii) {
+            if (cornerRadius > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @NonNull
     default Drawable create() {
@@ -90,7 +96,7 @@ public interface EffectParams {
     }
 
     /**
-     * 自定义绘制参数
+     * Canvas绘制所需参数
      */
     interface DrawEffectParams extends EffectParams {
 
@@ -112,7 +118,7 @@ public interface EffectParams {
         int getShadowColor();
 
         /**
-         * 是否设置了阴影（绘制的阴影需要关闭硬件加速）
+         * 是否有阴影区域
          */
         default boolean hasShadow() {
             return getShadowLeft() > 0 || getShadowTop() > 0 || getShadowRight() > 0 || getShadowBottom() > 0;
@@ -124,14 +130,14 @@ public interface EffectParams {
         boolean optStrokeCorner();
 
         /**
-         * 是否优化边框圆角处外边框圆角（前提{@link #optStrokeCorner}必须为true）
+         * 是否优化外边框圆角；（前提{@link #optStrokeCorner}必须为true）
          */
         default boolean optStrokeOutCorner() {
             return Effects.DEFAULT_ENABLE_OPT_OUT_CORNER;
         }
 
         /**
-         * 获取外边框圆角半径额外的增量；{@link #optStrokeOutCorner()}开启时才有效
+         * 获取外边框圆角优化的圆角增量值；{@link #optStrokeOutCorner()}开启时才有效
          */
         default float getIncrementStrokeOutCornerRadius() {
             if (optStrokeOutCorner()) {
@@ -141,11 +147,7 @@ public interface EffectParams {
             }
         }
 
-        /**
-         * 获取效果四周的大小
-         *
-         * @param rect 用于保存四周大小（四周大小都是正值）
-         */
+        @Override
         default void getEffectRect(Rect rect) {
             float strokeSize = getStrokeSize();
             float contentGap = getContentGap();
@@ -157,11 +159,8 @@ public interface EffectParams {
 
         @Override
         default boolean containSoftwareLayer() {
-            float[] cornerRadii = getCornerRadii();
-            //需要优化边框圆角
-            boolean isOptStrokeCorner = this.optStrokeCorner() && this.getStrokeSize() > 0 && (getCornerRadius() > 0f || (cornerRadii != null && cornerRadii.length > 0));
-            return (Build.VERSION.SDK_INT < 28 && isOptStrokeCorner) //边框的圆角优化采用了Xfermode，在28以前需要关闭硬件加速
-                    || this.hasShadow();//使用了阴影
+            return (Build.VERSION.SDK_INT < 28 && this.optStrokeCorner() && this.getStrokeSize() > 0 && hasCorner()) //边框的圆角优化采用了Xfermode，在28以前需要关闭硬件加速
+                    || this.hasShadow();//使用了阴影:阴影采用了MaskFilter，需要关闭硬件加速
         }
     }
 
@@ -170,13 +169,12 @@ public interface EffectParams {
      */
     interface NinePatchEffectParams extends EffectParams {
 
+        /**
+         * 获取.9图
+         */
         NinePatchDrawable getDrawable();
 
-        /**
-         * 获取效果四周的大小
-         *
-         * @param rect 用于保存四周大小（四周大小都是正值）
-         */
+        @Override
         default void getEffectRect(Rect rect) {
             float contentGap = getContentGap();
             rect.set((int) (getShadowLeft() + contentGap),
@@ -199,19 +197,17 @@ public interface EffectParams {
      * 通用参数
      */
     abstract class CommonParams implements EffectParams {
-
+        int mEffectBoundsType;
+        float mContentGap;
         float mShadowLeft;
         float mShadowRight;
         float mShadowTop;
         float mShadowBottom;
-        float mContentGap;
-        float mCornerRadius;
         float[] mCornerRadii;
-        int mEffectBoundsType;
 
         public CommonParams(EffectBuilder<?, ?> builder) {
-            mContentGap = builder.mContentGap;
             mEffectBoundsType = builder.mEffectBoundsType;
+            mContentGap = builder.mContentGap;
         }
 
         @Override
@@ -237,11 +233,6 @@ public interface EffectParams {
         @Override
         public float getContentGap() {
             return mContentGap;
-        }
-
-        @Override
-        public float getCornerRadius() {
-            return mCornerRadius;
         }
 
         @Nullable
@@ -289,7 +280,6 @@ public interface EffectParams {
     final class DrawEffectParamsImpl extends CommonParams implements DrawEffectParams {
 
         int mShadowColor;
-
         float mStrokeSize;
         boolean mOptStrokeCorner;
         int mStrokeColor;
@@ -303,9 +293,7 @@ public interface EffectParams {
             mShadowColor = builder.mShadowColor;
             mStrokeSize = builder.mStrokeSize;
             mStrokeColor = builder.mStrokeColor;
-            //如果设置了优化边框或者设置了自动优化并且边框大小超过了指定的厚度则进行边框优化
             mOptStrokeCorner = builder.mOptStrokeCorner;
-            mCornerRadius = builder.mCornerRadius;
             mCornerRadii = builder.mCornerRadii;
         }
 
