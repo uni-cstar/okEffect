@@ -10,5 +10,20 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.TYPE})
 public @interface EffectLayout {
-    Class<? extends ViewGroup>[] value() default {};
+    Class<? extends ViewGroup>[] value();
+
+    /**
+     * 生成的类前缀
+     *
+     * @return
+     */
+    String classPrefix() default "Effect";
+
+    /**
+     * 生成的类后缀
+     *
+     * @return
+     */
+    String classSuffix() default "";
+
 }

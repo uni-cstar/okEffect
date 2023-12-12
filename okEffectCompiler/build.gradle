@@ -11,7 +11,8 @@ java {
 
 dependencies {
     implementation("io.github.uni-cstar:okCompiler:0.0.1")
-    implementation("io.github.uni-cstar:okEffectAnnotation:1.0.0")
+    implementation("io.github.uni-cstar:okEffectAnnotation:1.0.1")
+//    implementation project(path:":okEffectAnnotation")
 
     def autoServiceVer = '1.0.1'
     /*注解处理器:只参与编译，不用依赖进来*/
