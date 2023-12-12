@@ -1,5 +1,10 @@
 [uni-cstar/okEffect: 用于TV(手机)的焦点（点击）效果（阴影、边框，自定义绘制、.9图、自定义Layout等） (github.com)](https://github.com/uni-cstar/okEffect)
 
+##### 工程说明
+- okEffect包含核心的业务逻辑
+- okEffectAnnotation提供了自动生成布局代码的注解
+- okEffectCompiler为注解处理器，用于生成代码
+
 ### 1、下载
 
 `implementation 'io.github.uni-cstar:okEffect:0.0.1'`
@@ -22,13 +27,13 @@
 ### 3、使用方式
 
 #### 3.1. 代码创建Drawable方式：
-3.1.1 **强烈建议使用.9图作为绘制的内容，其效率更高，兼容性更好。**
+##### 3.1.1 **强烈建议使用.9图作为绘制的内容，其效率更高，兼容性更好。**
 
 
 ```java
 Effects.withNinePatch(this, R.drawable.bg_shadow).into(view);
 ```
-3.1.2 Canvas绘制方式
+##### 3.1.2 Canvas绘制方式
 ```java
 //该方式创建了一个四周大小为20的红色阴影并将其作为背景设置给了view
 Effects.withDraw().setShadow(20f, Color.RED).into(view);
@@ -38,7 +43,7 @@ Effects.withDraw().setShadow(20f, Color.RED).into(view);
 // 第一步：创建一个Drawable对象:该方式创建了一个四周大小为20的红色阴影
 Drawable drawable = Effects.withDraw().setShadow(20f, Color.RED).buildParams().create();
 // 第二步：使用该Drawable对象，您可以直接使用该Drawable，也可以通过该drawable创建StateListDrawable进行使用
-        view.setBackground(drawable);
+view.setBackground(drawable);
 ```
 
 #### 3.2. 现有的xml布局注入
@@ -57,7 +62,7 @@ Drawable drawable = Effects.withDraw().setShadow(20f, Color.RED).buildParams().c
 ```java
 Effect.applyInjectFactory2(activity);
 //如果您的Activity需要使用自定义的LayoutInflater.Factory2，则可以使用如下代码：
-        Effect.applyInjectFactory2(activity,factory2);//factory2为您的LayoutInflater.Factory2对象
+Effect.applyInjectFactory2(activity,factory2);//factory2为您的LayoutInflater.Factory2对象
 
 ```
 
@@ -89,16 +94,16 @@ Effect.applyInjectFactory2(activity);
 </unics.okeffect.EffectFrameLayout>
 ```
 #### 3.4、自定义布局扩展
-如果内置生成的`EffectFrameLayout`、`EffectRelativeLayout`无法满足您的需求，你需要使用注入LinearLayout、ConstraintLayout或者为您的CustomLayout添加同样的功能，则可以通过自动生成对应布局使用；以下以生成LinearLayout、ConstraintLayout和CustomLayout对应的自定义布局作为示例。
+如果内置生成的`EffectFrameLayout`、`EffectRelativeLayout`无法满足您的需求，你需要注入其他布局比如LinearLayout、ConstraintLayout或者你自定义的CustomLayout，则可以通过自动代码生成对应布局使用；以下以生成LinearLayout、ConstraintLayout和CustomLayout对应的自定义布局作为示例。
 
-3.4.1 添加依赖
+##### 3.4.1 添加依赖
 ```
 //如果您使用了kapt，则修改为 kapt 'io.github.uni-cstar:okEffectCompiler:1.0.1'
 annotationProcessor 'io.github.uni-cstar:okEffectCompiler:1.0.1'
 compileOnly 'io.github.uni-cstar:okEffectAnnotation:1.0.1'
 ```
 
-3.4.2 申明需要自动生成的类
+##### 3.4.2 申明需要自动生成的类
 ```
 @EffectLayout(value = {LinearLayout.class, ConstraintLayout.class,CustomLayout.class})
 class MyEffectLayoutInject {//类名无所谓
@@ -106,9 +111,9 @@ class MyEffectLayoutInject {//类名无所谓
 ```
 增加以上配置后，构建工程即可生成unics.okeffect.EffectLinearLayout、unics.okeffect.EffectConstraintLayout、unics.okeffect.EffectCustomLayout；
 
-*其生成规则为在包unics.okeffect下根据申明的类名前面增加Effect前缀作为最终的生成文件名*
+*默认生成规则为在包unics.okeffect下根据申明的类名，在前面增加Effect前缀作为最终的生成的文件名*
 
-3.4.3 修改生成的类名
+##### 3.4.3 修改生成的类名
 如果你不想使用默认生成的类名，目前也仅支持修改生成的类名前缀和后缀，无法修改包名；
 ```
 @EffectLayout(value = {CustomLayout.class},classPrefix = "MyEffect",classSuffix = "2")
