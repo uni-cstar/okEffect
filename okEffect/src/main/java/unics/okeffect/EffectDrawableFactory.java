@@ -38,12 +38,7 @@ interface EffectDrawableFactory<T extends EffectParams> {
         drawable.setColor(params.getShadowColor());
         //阴影圆角绘制优化
         drawable.setOptShadowCorner(params.optStrokeOutCorner(), params.getIncrementStrokeOutCornerRadius());
-        float[] radii = params.getCornerRadii();
-        if (radii != null && radii.length > 0) {
-            drawable.setCornerRadii(radii);
-        } else {
-            drawable.setCornerRadius(params.getCornerRadius());
-        }
+        drawable.setCornerRadii(params.getCornerRadii());
         return drawable;
     }
 
@@ -56,11 +51,7 @@ interface EffectDrawableFactory<T extends EffectParams> {
         drawable.setOptCorner(params.optStrokeCorner());
         drawable.setColor(params.getStrokeColor());
         float[] radii = params.getCornerRadii();
-        if (radii != null && radii.length > 0) {
-            drawable.setCornerRadii(radii);
-        } else {
-            drawable.setCornerRadius(params.getCornerRadius());
-        }
+        drawable.setCornerRadii(radii);
         return drawable;
     }
 
