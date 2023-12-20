@@ -5,6 +5,21 @@
 - okEffectAnnotation提供了自动生成布局代码的注解
 - okEffectCompiler为注解处理器，用于生成代码
 
+###### 体验
+运行截图：
+
+![运行截图](https://github.com/uni-cstar/okEffect/blob/master/doc/okEffectSample.gif)
+
+查看运行视频：
+[点击观看](https://github.com/uni-cstar/okEffect/blob/master/doc/okEffectSample.mp4)
+
+DemoApk：
+[点击下载](https://github.com/uni-cstar/okEffect/blob/master/doc/app-release.apk)
+
+使用手机浏览器扫描二维码下载安装
+
+![二维码](https://github.com/uni-cstar/okEffect/blob/master/doc/qrcode.png)
+
 ### 1、下载
 
 `implementation 'io.github.uni-cstar:okEffect:0.0.1'`

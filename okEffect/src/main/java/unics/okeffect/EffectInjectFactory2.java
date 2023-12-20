@@ -55,8 +55,6 @@ public class EffectInjectFactory2 implements LayoutInflater.Factory2 {
         if (view == null) {
             if (sDependAppCompat && mActivity instanceof AppCompatActivity) {
                 view = ((AppCompatActivity) mActivity).getDelegate().createView(parent, name, context, attrs);
-                if (view == null && name.startsWith("androidx"))
-                    return null;
             }
             if (view == null) {
                 view = mActivity.onCreateView(parent, name, context, attrs);

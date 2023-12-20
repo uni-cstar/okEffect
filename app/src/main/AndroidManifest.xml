@@ -13,7 +13,6 @@
         android:theme="@style/Theme.OkEffect"
         tools:targetApi="31" >
         <activity android:name=".EffectSampleActivity"
-            android:screenOrientation="landscape"
             android:exported="true"
             android:label="EffectDrawableSample">
             <intent-filter>
