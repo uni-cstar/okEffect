@@ -25,9 +25,7 @@
     protected * ;
 }
 
--keep class unics.okeffect.annotation.**{
-    *;
-}
--keep class unics.okeffect.compiler.**{
-    *;
-}
+# 保留注解
+-keepattributes *Annotation*
+
+-dontwarn unics.okeffect.annotation.EffectLayout
